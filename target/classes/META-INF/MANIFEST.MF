@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: joshu
+Build-Jdk: 13.0.1
+Implementation-Title: Assignment5
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor-Id: com.meritamerica.capstone
+Implementation-Vendor: Pivotal Software, Inc.
+Implementation-URL: http://projects.spring.io/spring-boot/capstone/
+Created-By: Maven Integration for Eclipse
+
