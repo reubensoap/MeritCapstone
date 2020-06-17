@@ -40,12 +40,11 @@ public class AccountHolder{
 	private Integer id;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@Column(name = "checking_id")
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private CheckingAccount checking;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@Column(name = "savings_id")
+
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private SavingsAccount savings;
 	
@@ -55,17 +54,17 @@ public class AccountHolder{
 	private List<DBAccount> dbAccounts;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@Column(name = "rollover_ira_id")
+
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private RolloverIRA rolloverIRA;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@Column(name = "roth_ira_id")
+
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private RothIRA rothIRA;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@Column(name = "regular_ira_id")
+
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private RegularIRA regularIRA;
 	

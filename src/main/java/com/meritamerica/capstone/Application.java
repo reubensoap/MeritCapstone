@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-@EnableJpaRepositories(basePackages = "com.meritamerica.assignment7.repository")
-@EntityScan("com.meritamerica.assignment7.models")
+@EnableJpaRepositories(basePackages = "com.meritamerica.capstone.repository")
+@EntityScan("com.meritamerica.capstone.models")
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
