@@ -76,5 +76,21 @@ public class MeritBankController {
 		return cdoRepository.findAll();
 	}
 	
+	@PreAuthorize("permitAll()")
+	@PostMapping(value = "/login")
+	public ResponseEntity<?> login(@RequestBody AuthenticationRequest authRequest) throws Exception{
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(authRequest.getUsername(),authRequest.getPassword()));
+
+		}
+		catch(BadCredentialsException e) {
+			throw new UnauthorizedException("Incorrect username or password");
+		}
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+		final String jwt = jwtTokenUtil.generateToken(userDetails);
+		log.info(authRequest.getUsername() + " has logged in.");
+		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+	}
 	
 }
