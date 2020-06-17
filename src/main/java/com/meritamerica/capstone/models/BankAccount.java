@@ -2,6 +2,7 @@ package com.meritamerica.capstone.models;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,6 +26,9 @@ public abstract class BankAccount {
 	@Column(name = "bank_account_id")
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	protected Integer accountNumber;
+	
+	@OneToMany
+	private List<Transaction> transactions;
 
 	
 	public BankAccount() {
@@ -65,6 +70,14 @@ public abstract class BankAccount {
 		return interestRate;
 	}
 
+	public List<Transaction> getTransactions(){
+		return transactions;
+	}
+	
+	public void addTransaction(Transaction transaction) {
+		transactions.add(transaction);
+	}
+	
 	public boolean withdraw(double amount) {
 		if(amount > 0 && amount < balance) {
 			balance -= amount;
@@ -82,9 +95,6 @@ public abstract class BankAccount {
 		return false;
 	}
 
-	public double futureValue(int years) {
-		return MeritBank.futureValue(balance, getInterestRate(), years);
-	}
 
 	public String writeToString() {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
@@ -111,5 +121,7 @@ public abstract class BankAccount {
 	public void setAccoutStartDate(java.util.Date accoutStartDate) {
 		this.accoutStartDate = accoutStartDate;
 	}
+	
+	public abstract double closingValue();
 
 }

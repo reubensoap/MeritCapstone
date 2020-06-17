@@ -43,4 +43,9 @@ public class SavingsAccount extends BankAccount{
 		}
 	}
 	
+	@Override
+	public double closingValue() {
+		return -1;
+	}
+	
 }

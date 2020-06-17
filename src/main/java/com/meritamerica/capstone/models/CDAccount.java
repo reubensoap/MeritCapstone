@@ -67,9 +67,8 @@ public class CDAccount extends BankAccount{
 		toString.append(term);
 		return toString.toString();
 	}
-
-	public double futureValue() {	
-		return futureValue(term);
+	@Override
+	public double closingValue() {
+		return balance * Math.pow(1 + offering.getInterestRate(), offering.getTerm());
 	}
-
 }

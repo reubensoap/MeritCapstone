@@ -28,18 +28,9 @@ public class CheckingAccount extends BankAccount{
 			double interestRate, Date openedOn) {
 			super(accountNumber, balance, interestRate, openedOn);
 	}
-
-	public static CheckingAccount readFromString(String accountData) throws ParseException{
-		try {
-			String[] temp = accountData.split(",");
-			Date date = new SimpleDateFormat("dd/MM/yyyy").parse(temp[3]);
-			CheckingAccount newAccount =  new CheckingAccount(Integer.valueOf(temp[0]),
-					Double.valueOf(temp[1]),Double.valueOf(temp[2]),
-					date);
-			return newAccount;
-		}catch(Exception e) {
-			throw new NumberFormatException();
-		}
+	@Override
+	public double closingValue() {
+		return balance;
 	}
 	
 }
