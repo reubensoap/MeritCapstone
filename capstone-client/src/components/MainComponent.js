@@ -4,9 +4,11 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import About from './AboutComponent';
 import Accounts from './AccountsPageComponents';
+import Calculator from './CalculatorComponent';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux'; 
 import { actions } from 'react-redux-form';
+
 
 class Main extends Component {
 
@@ -33,6 +35,12 @@ class Main extends Component {
           <Accounts />
         );
       }
+
+      const CalculatorPage = () => {
+        return(
+          <Calculator />
+        );
+      }
   
       return (
         <div>
@@ -41,6 +49,7 @@ class Main extends Component {
             <Route path="/home" component={HomePage} />
             <Route path="/aboutus" component={AboutPage} />
             <Route path="/accounts" component={AccountsPage} />
+            <Route path="/calculator" component={CalculatorPage} />
             <Redirect to="/home" />
           </Switch>
           <Footer />
