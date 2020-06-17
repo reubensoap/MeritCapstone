@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+p {
+  font-size: 16px;
+}
+
+.biggest-header-text {
+  font-size: 4rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.secondary-header-text {
+  font-size: 2rem;
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+.tiny-text {
+  font-size: 12px;
+  color: #999;
+}
+
+.breaker {
+  display: flex;
+}
+
+.da-stick {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+  z-index: 1;
+}
+
+.smaller-section img {
+  width: 80%;
+  height: auto;
+}
+
+.btn-important {
+  background-color: rgb(61, 179, 77);
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 24px;
+  padding: 10px 60px;
+}
+
+.btn-important:hover {
+  background-color: rgb(93, 190, 106);
+}
+
+.gallery {
+  display: flex;
+  justify-content: center;
+}
+
+.gallery img {
+  width: 200px;
+  height: auto;
+  margin: 10px;
+}
+
+/* Colors */
+
+.gray {
+  color: #777;
+}
+
+.light-gray {
+  background-color: rgb(241, 241, 241);
+}
+
+.trans-white{
+  background-color: rgba(255, 255, 255, 0.863);
+}
+
+.color-primary {
+  background: rgb(22, 138, 57);
+}
