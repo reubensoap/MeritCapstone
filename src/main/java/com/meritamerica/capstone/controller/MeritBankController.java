@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -66,9 +67,13 @@ public class MeritBankController {
 	private JwtUtil jwtTokenUtil;
 	Logger log =  LoggerFactory.getLogger(this.getClass());
 
+	
+	@PreAuthorize("permitAll()")
 	@GetMapping(value = "/CDOfferings")
 	public List<CDOffering> getCDOfferings(){
 		log.info("Returned CDOfferings of MeritBank.");
 		return cdoRepository.findAll();
 	}
+	
+	
 }

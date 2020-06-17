@@ -2,9 +2,11 @@ package com.meritamerica.capstone.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.meritamerica.capstone.filters.JwtRequestFilter;
 
+@Configuration  
+@EnableGlobalMethodSecurity(prePostEnabled = true)  
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 	
@@ -36,6 +40,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -44,17 +49,17 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable().authorizeRequests()
-				.antMatchers("/AccountHolders/**").hasAuthority("admin")
-				.antMatchers("/Me/**").hasAuthority("accountholder")
-				.antMatchers(HttpMethod.POST,"/CDOfferings").hasAuthority("admin")
-				.antMatchers(HttpMethod.GET,"/CDOfferings").hasAnyAuthority("admin","accountholder")
-				.antMatchers("/authenticate/createUser").hasAuthority("admin")
-				.antMatchers("/authenticate").permitAll()
-				.anyRequest().authenticated().and().
-						exceptionHandling().and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//		httpSecurity.csrf().disable().authorizeRequests()
+//				.antMatchers("/AccountHolders/**").hasAuthority("admin")
+//				.antMatchers("/Me/**").hasAuthority("accountholder")
+//				.antMatchers(HttpMethod.POST,"/CDOfferings").hasAuthority("admin")
+//				.antMatchers(HttpMethod.GET,"/CDOfferings").hasAnyAuthority("admin","accountholder")
+//				.antMatchers("/authenticate/createUser").hasAuthority("admin")
+//				.antMatchers("/").permitAll()
+//				.anyRequest().authenticated().and().
+//						exceptionHandling().and().sessionManagement()
+//				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
 }
