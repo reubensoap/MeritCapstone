@@ -27,7 +27,7 @@ public abstract class BankAccount {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	protected Integer accountNumber;
 	
-	@OneToMany
+
 	private List<Transaction> transactions;
 
 	
