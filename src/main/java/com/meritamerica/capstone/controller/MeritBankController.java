@@ -48,6 +48,7 @@ import com.meritamerica.capstone.security.JwtUtil;
 import com.meritamerica.capstone.security.MyUserDetailsService;
 
 @RestController
+@PreAuthorize("isAuthenticated()")   
 @RequestMapping("/")
 public class MeritBankController {
 
