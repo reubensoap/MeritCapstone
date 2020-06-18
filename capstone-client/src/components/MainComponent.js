@@ -6,14 +6,47 @@ import About from './AboutComponent';
 import Accounts from './AccountsPageComponents';
 import Calculator from './CalculatorComponent';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
+import { getCdOfferings } from '../Utils/APIUtils';
+import { OFFERS } from '../Utils/testCDOfferings';
 import { connect } from 'react-redux'; 
 import { actions } from 'react-redux-form';
+import axios from 'axios';
 
 
 class Main extends Component {
 
     constructor(props) {
       super(props);
+      this.state = {
+        cdofferings: []
+      }
+      this.handleCDOfferings = this.handleCDOfferings.bind(this);
+    }
+
+    handleCDOfferings() {
+      // method getCdOffering was not working due to CORS
+      // tried axios to get information and it works, console
+      // shows the CDOffers in array. However the data does not 
+      // update outside of the .then
+      getCdOfferings()
+      .then(response => {
+        this.setState({
+          cdofferings: response
+        });
+      });
+      axios.get('http://localhost:8080/CDOfferings')
+      .then(res => {
+        console.log(res);
+        this.setState ({ cdofferings: res.data });
+        this.self = res.data;
+        console.log(this.state.cdofferings);
+      })
+      .catch(err => console.log(err));
+    }
+
+    componentDidMount(){
+      this.handleCDOfferings()
+      console.log(this.state.cdofferings);
     }
   
     render() {
@@ -38,7 +71,7 @@ class Main extends Component {
 
       const CalculatorPage = () => {
         return(
-          <Calculator />
+          <Calculator offers={this.state.cdofferings}/>
         );
       }
   

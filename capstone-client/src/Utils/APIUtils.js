@@ -1,5 +1,6 @@
-const BASE_URL = 'http://localhost:8081';
+const BASE_URL = 'http://localhost:8080';
 const ACCESS_TOKEN = 'accessToken';
+const CORS_ANYWHERE = 'https://cors-anywhere.herokuapp.com/';
 
 const request = (options) => {
     const headers = new Headers({
@@ -23,11 +24,11 @@ const request = (options) => {
         })
     );
 
+};
     export function getCdOfferings() {
         return request({
-            url: API_BASE_URL + "/CDOfferings",
+            url: 'http://localhost:8080/CDOfferings',
             method: 'GET'
         });
     }
 
-};
