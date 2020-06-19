@@ -70,6 +70,24 @@ p {
   margin: 10px;
 }
 
+.tableCD {
+  margin: auto;
+  width: 80%;
+  background: rgb(216, 216, 216);
+  border-radius: 5px;
+}
+
+.tableHeadCD {
+  background: rgb(207, 207, 207);
+}
+
+.tableLabels {
+  width: 20%;
+  background: rgba(119, 119, 119, 0.151);
+  border-right: 2px solid rgb(255, 255, 255);
+  font-weight: 600;
+}
+
 /* Colors */
 
 .gray {

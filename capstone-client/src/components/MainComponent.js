@@ -34,14 +34,7 @@ class Main extends Component {
           cdofferings: response
         });
       });
-      axios.get('http://localhost:8080/CDOfferings')
-      .then(res => {
-        console.log(res);
-        this.setState ({ cdofferings: res.data });
-        this.self = res.data;
-        console.log(this.state.cdofferings);
-      })
-      .catch(err => console.log(err));
+      
     }
 
     componentDidMount(){
