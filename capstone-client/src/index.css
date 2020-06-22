@@ -88,6 +88,25 @@ p {
   font-weight: 600;
 }
 
+.calc-form {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  align-items: baseline;
+}
+
+.calc-form label {
+  margin-right: 1rem;
+}
+
+.cal-form-box {
+  border: none;
+  border-bottom: 2px solid rgb(44, 124, 44);
+  background: none;
+}
+
 /* Colors */
 
 .gray {
