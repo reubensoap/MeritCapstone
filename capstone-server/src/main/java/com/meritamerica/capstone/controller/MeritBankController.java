@@ -104,4 +104,12 @@ public class MeritBankController {
 		return user;
 	}
 	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/CreateAccount")
+	public AccountHolder createAccount(@RequestBody AccountHolder account, Principal token) {
+		User user = userRepository.findByUserName(token.getName()).get();
+		account.setUser(user);
+		aRepository.save(account);
+		return account;
+	}
 }
