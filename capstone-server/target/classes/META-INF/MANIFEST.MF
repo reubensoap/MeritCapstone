@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
+Built-By: joshu
+Build-Jdk: 13.0.1
 Implementation-Title: Assignment5
 Implementation-Version: 1.0-SNAPSHOT
-Built-By: MrSoap
 Implementation-Vendor-Id: com.meritamerica.capstone
-Build-Jdk: 1.8.0_161
+Implementation-Vendor: Pivotal Software, Inc.
 Implementation-URL: http://projects.spring.io/spring-boot/capstone/
 Created-By: Maven Integration for Eclipse
-Implementation-Vendor: Pivotal Software, Inc.
 
