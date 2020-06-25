@@ -96,9 +96,9 @@ public class MeritBankController {
 	@PreAuthorize("permitAll()")
 	@PostMapping(value = "/signup")
 	public User signup(@RequestBody User user){
-//		if(userRepository.exists(user.getUserName())) {
-//			throw new BadCredentialsException("User name not available.");
-//		}
+		if(userRepository.existsByUserName(user.getUserName())) {
+			throw new BadCredentialsException("User name not available.");
+		}
 		user.setRoles("accountholder");
 		userRepository.save(user);
 		return user;

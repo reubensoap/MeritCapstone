@@ -9,6 +9,6 @@ import com.meritamerica.capstone.models.User;
 public interface UserRepository extends JpaRepository<User, Integer>{
 	Optional<User> findByUserName(String userName);
 
-//	boolean exists(String userName);
+	Boolean existsByUserName(String userName);
 
 }
