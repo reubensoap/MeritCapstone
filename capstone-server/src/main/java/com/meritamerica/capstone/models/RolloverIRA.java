@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "rollover_ira", catalog = "meritbank")
 public class RolloverIRA extends BankAccount{
 	
 	private static final double INTEREST_RATE = 0.01;

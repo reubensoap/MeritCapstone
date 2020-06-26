@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,12 +12,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name="bank_account")
 public abstract class BankAccount {
 	
 	protected double balance;
@@ -26,8 +32,11 @@ public abstract class BankAccount {
 	@Column(name = "bank_account_id")
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	protected Integer accountNumber;
-	
-	@OneToMany
+//	@OneToOne(cascade = CascadeType.ALL)
+//	@JsonIgnore
+//	@JoinColumn
+//	private AccountHolder account;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Transaction> transactions;
 
 	
@@ -77,7 +86,15 @@ public abstract class BankAccount {
 	public void addTransaction(Transaction transaction) {
 		transactions.add(transaction);
 	}
-	
+//	
+//	public AccountHolder getAccount() {
+//		return account;
+//	}
+//
+//	public void setAccount(AccountHolder account) {
+//		this.account = account;
+//	}
+
 	public boolean withdraw(double amount) {
 		if(amount > 0 && amount < balance) {
 			balance -= amount;

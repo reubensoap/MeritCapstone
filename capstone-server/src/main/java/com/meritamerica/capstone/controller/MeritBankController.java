@@ -38,10 +38,15 @@ import com.meritamerica.capstone.models.AuthenticationResponse;
 import com.meritamerica.capstone.models.CDAccount;
 import com.meritamerica.capstone.models.CDOffering;
 import com.meritamerica.capstone.models.CheckingAccount;
+import com.meritamerica.capstone.models.DBAccount;
+import com.meritamerica.capstone.models.RegularIRA;
+import com.meritamerica.capstone.models.RolloverIRA;
+import com.meritamerica.capstone.models.RothIRA;
 import com.meritamerica.capstone.models.SavingsAccount;
 import com.meritamerica.capstone.models.User;
 import com.meritamerica.capstone.repository.AccountHolderContactdetailsRepository;
 import com.meritamerica.capstone.repository.AccountHolderRepository;
+import com.meritamerica.capstone.repository.BankAccountRepository;
 import com.meritamerica.capstone.repository.CDOfferingRepository;
 import com.meritamerica.capstone.repository.UserRepository;
 import com.meritamerica.capstone.security.JwtUtil;
@@ -62,6 +67,8 @@ public class MeritBankController {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private BankAccountRepository bankRepository;
 	@Autowired
 	private MyUserDetailsService userDetailsService;
 	@Autowired
@@ -109,7 +116,89 @@ public class MeritBankController {
 	public AccountHolder createAccount(@RequestBody AccountHolder account, Principal token) {
 		User user = userRepository.findByUserName(token.getName()).get();
 		account.setUser(user);
+		user.setAccount(account);
 		aRepository.save(account);
 		return account;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@GetMapping(value = "/AccountHolder")
+	public AccountHolder getAccountHolder(Principal token) {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account= user.getAccount();
+		log.info(user.getUserName() + " has  accessed their information.");
+		return account;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/CheckingAccount")
+	public CheckingAccount createCheckingAccount(Principal token, @RequestBody CheckingAccount checking) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		user.getAccount().setChecking(checking);
+
+		aRepository.save(user.getAccount());
+		return checking;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/SavingsAccount")
+	public SavingsAccount createSavingsAccount(Principal token, @RequestBody SavingsAccount savings) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		user.getAccount().setSavings(savings);
+		userRepository.save(user);
+		return savings;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/DBAccount")
+	public DBAccount createDBAccount(Principal token, @RequestBody DBAccount dbAccount) throws AccountExistsException, ExceedsCombinedLimitException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		user.getAccount().addDBAccount(dbAccount);
+		userRepository.save(user);
+		return dbAccount;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/CDAccount")
+	public CDAccount createCDAccount(Principal token, @RequestBody CDAccount cda) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		user.getAccount().addCdAccount(cda);
+		userRepository.save(user);
+		return cda;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/RolloverIRA")
+	public RolloverIRA createRolloverIRA(Principal token, @RequestBody RolloverIRA ira) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		user.getAccount().setRolloverIRA(ira);
+		userRepository.save(user);
+		return ira;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/RothIRA")
+	public RothIRA createRothIRA(Principal token, @RequestBody RothIRA ira) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		user.getAccount().setRothIRA(ira);
+		userRepository.save(user);
+		return ira;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/RegularIRA")
+	public RegularIRA createRegularIRA(Principal token, @RequestBody RegularIRA ira) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		user.getAccount().setRegularIRA(ira);
+		userRepository.save(user);
+		return ira;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/DeleteBankAccount/{id}")
+	public boolean deleteBankAccount(){
+		
+		
+		return true;
 	}
 }

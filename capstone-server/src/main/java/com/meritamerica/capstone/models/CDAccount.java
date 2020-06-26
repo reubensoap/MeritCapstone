@@ -10,7 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "cd_accounts", catalog = "meritbank")
 public class CDAccount extends BankAccount{
 	
 	@ManyToOne

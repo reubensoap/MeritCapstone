@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "checking_accounts", catalog = "meritbank")
 public class CheckingAccount extends BankAccount{
 	
 	

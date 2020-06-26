@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritamerica.capstone.exception.AccountExistsException;
 import com.meritamerica.capstone.exception.ExceedsCombinedLimitException;
 
@@ -25,75 +26,64 @@ public class AccountHolder{
 
 	@NotBlank(message = "First name is required.")
 	private String firstName;
-	
+
 	private String middleName;
-	
+
 	@NotBlank(message = "Last name is required.")
 	private String lastName;
-	
+
 	@NotBlank(message = "SSN is required.")
 	private String ssn;
-	
+
 	@Id
 	@Column(name = "account_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private CheckingAccount checking;
-	
-	@OneToOne(cascade = CascadeType.ALL)
 
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private SavingsAccount savings;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
-	@Column(name = "dba_id")
+
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private List<DBAccount> dbAccounts;
-	
-	@OneToOne(cascade = CascadeType.ALL)
 
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private RolloverIRA rolloverIRA;
-	
-	@OneToOne(cascade = CascadeType.ALL)
 
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private RothIRA rothIRA;
-	
-	@OneToOne(cascade = CascadeType.ALL)
 
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private RegularIRA regularIRA;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
-	@Column(name = "cda_id")
+
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private List<CDAccount> cdAccounts;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private AccountHoldersContactDetails contact;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
+	@JsonIgnore
 	private User user;
-	
+
 	public AccountHolder(){
 		firstName = "";
 		middleName = "";
 		lastName = "";
 		ssn = "";
-
-		checking = new CheckingAccount();
-		savings = new SavingsAccount();
-		cdAccounts = new ArrayList<CDAccount>();
-		dbAccounts = new ArrayList<DBAccount>();
-		rolloverIRA = new RolloverIRA();
-		rothIRA = new RothIRA();
-		regularIRA = new RegularIRA();
 	}
 
 	public AccountHolder(String firstName, String middleName,
@@ -102,14 +92,6 @@ public class AccountHolder{
 		this.middleName = middleName;
 		this.lastName = lastName;
 		this.ssn = ssn;
-
-		checking = new CheckingAccount();
-		savings = new SavingsAccount();
-		cdAccounts = new ArrayList<CDAccount>();
-		dbAccounts = new ArrayList<DBAccount>();
-		rolloverIRA = new RolloverIRA();
-		rothIRA = new RothIRA();
-		regularIRA = new RegularIRA();
 	}
 
 	public String getFirstName() {
@@ -153,12 +135,7 @@ public class AccountHolder{
 	}
 
 	public void setChecking(CheckingAccount checking) throws AccountExistsException {
-		if(checking == null) {
-			this.checking = checking;
-		}
-		else{
-			throw new AccountExistsException();
-		}
+		this.checking = checking;
 	}
 
 	public SavingsAccount getSavings() {
@@ -166,12 +143,7 @@ public class AccountHolder{
 	}
 
 	public void setSavings(SavingsAccount savings) throws AccountExistsException {
-		if(savings == null) {
-			this.savings = savings;
-		}
-		else{
-			throw new AccountExistsException();
-		}
+		this.savings = savings;
 	}
 
 	public List<DBAccount> getDbAccount() {
@@ -192,12 +164,7 @@ public class AccountHolder{
 	}
 
 	public void setRolloverIRA(RolloverIRA rolloverIRA) throws AccountExistsException {
-		if(rolloverIRA == null) {
-			this.rolloverIRA = rolloverIRA;
-		}
-		else{
-			throw new AccountExistsException();
-		}
+		this.rolloverIRA = rolloverIRA;
 	}
 
 	public RothIRA getRothIRA() {
@@ -205,12 +172,7 @@ public class AccountHolder{
 	}
 
 	public void setRothIRA(RothIRA rothIRA) throws AccountExistsException {
-		if(rothIRA == null) {
-			this.rothIRA = rothIRA;
-		}
-		else{
-			throw new AccountExistsException();
-		}
+		this.rothIRA = rothIRA;
 	}
 
 	public RegularIRA getRegularIRA() {
@@ -218,12 +180,7 @@ public class AccountHolder{
 	}
 
 	public void setRegularIRA(RegularIRA regularIRA) throws AccountExistsException {
-		if(regularIRA == null) {
-			this.regularIRA = regularIRA;
-		}
-		else{
-			throw new AccountExistsException();
-		}
+		this.regularIRA = regularIRA;
 	}
 
 	public List<CDAccount> getCdAccount() {
@@ -249,15 +206,5 @@ public class AccountHolder{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	public void closeAccount(BankAccount account) {
-		if(savings != null) {
-			savings.deposit(account.closingValue());
-			
-		}
-		else {
-			savings = new SavingsAccount(account.closingValue());
-		}
-	}
-	
+
 }
