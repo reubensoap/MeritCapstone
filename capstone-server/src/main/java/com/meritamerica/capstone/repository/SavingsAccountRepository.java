@@ -12,12 +12,12 @@ import com.meritamerica.capstone.models.CheckingAccount;
 
 @Repository
 @Transactional
-public interface CheckingAccountRepository extends JpaRepository<BankAccount, Integer> {
+public interface SavingsAccountRepository extends JpaRepository<BankAccount, Integer> {
 	
-//	@Modifying
-//	@Query("delete from checking_account where bank_account_id=:accountNumber")
-//	void deleteByaccountNumber(@Param("accountNumber") Integer accountNumber);
-//	
-	void deleteByaccountNumber(Integer accountNumber);
+	@Modifying
+	@Query("delete from savings_account where bank_account_id=:accountNumber")
+	void deleteByaccountNumber(@Param("accountNumber") Integer accountNumber);
+	
+//	void deleteByaccountNumber(Integer accountNumber);
 
 }

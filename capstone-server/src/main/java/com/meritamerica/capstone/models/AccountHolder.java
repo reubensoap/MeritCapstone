@@ -41,37 +41,36 @@ public class AccountHolder{
 	private Integer id;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private CheckingAccount checking;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private SavingsAccount savings;
 
 	@OneToMany(cascade = CascadeType.ALL)
-
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private List<DBAccount> dbAccounts;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private RolloverIRA rolloverIRA;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private RothIRA rothIRA;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private RegularIRA regularIRA;
 
 	@OneToMany(cascade = CascadeType.ALL)
 
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private List<CDAccount> cdAccounts;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn
 	private AccountHoldersContactDetails contact;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -151,12 +150,7 @@ public class AccountHolder{
 	}
 
 	public void addDBAccount(DBAccount dbAccount) throws ExceedsCombinedLimitException {
-		if(this.dbAccounts.size() > 3) {
-			this.dbAccounts.add(dbAccount);
-		}
-		else {
-			throw new ExceedsCombinedLimitException();
-		}
+		dbAccounts.add(dbAccount);
 	}
 
 	public RolloverIRA getRolloverIRA() {

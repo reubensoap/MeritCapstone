@@ -16,7 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,7 +47,14 @@ import com.meritamerica.capstone.models.User;
 import com.meritamerica.capstone.repository.AccountHolderContactdetailsRepository;
 import com.meritamerica.capstone.repository.AccountHolderRepository;
 import com.meritamerica.capstone.repository.BankAccountRepository;
+import com.meritamerica.capstone.repository.CDAccountRepository;
 import com.meritamerica.capstone.repository.CDOfferingRepository;
+import com.meritamerica.capstone.repository.CheckingAccountRepository;
+import com.meritamerica.capstone.repository.DBAccountRepository;
+import com.meritamerica.capstone.repository.RegularIRARepository;
+import com.meritamerica.capstone.repository.RolloverIRARepository;
+import com.meritamerica.capstone.repository.RothIRARepository;
+import com.meritamerica.capstone.repository.SavingsAccountRepository;
 import com.meritamerica.capstone.repository.UserRepository;
 import com.meritamerica.capstone.security.JwtUtil;
 import com.meritamerica.capstone.security.MyUserDetailsService;
@@ -62,13 +69,25 @@ public class MeritBankController {
 	@Autowired
 	CDOfferingRepository cdoRepository;
 	@Autowired
+	DBAccountRepository DBARepository;
+	@Autowired
+	CDAccountRepository CDARepository;
+	@Autowired
+	RegularIRARepository regularRepository;
+	@Autowired
+	RolloverIRARepository rolloverRepository;
+	@Autowired
+	RothIRARepository rothRepository;
+	@Autowired
+	CheckingAccountRepository checkingRepository;
+	@Autowired
+	SavingsAccountRepository savingsRepository;
+	@Autowired
 	AccountHolderContactdetailsRepository contactRepository;
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private BankAccountRepository bankRepository;
 	@Autowired
 	private MyUserDetailsService userDetailsService;
 	@Autowired
@@ -125,18 +144,17 @@ public class MeritBankController {
 	@GetMapping(value = "/AccountHolder")
 	public AccountHolder getAccountHolder(Principal token) {
 		User user = userRepository.findByUserName(token.getName()).get();
-		AccountHolder account= user.getAccount();
 		log.info(user.getUserName() + " has  accessed their information.");
-		return account;
+		return aRepository.findOne(user.getAccount().getId());
 	}
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/CheckingAccount")
 	public CheckingAccount createCheckingAccount(Principal token, @RequestBody CheckingAccount checking) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
-		user.getAccount().setChecking(checking);
-
-		aRepository.save(user.getAccount());
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		account.setChecking(checking);
+		aRepository.save(account);
 		return checking;
 	}
 	
@@ -144,8 +162,9 @@ public class MeritBankController {
 	@PostMapping(value = "/SavingsAccount")
 	public SavingsAccount createSavingsAccount(Principal token, @RequestBody SavingsAccount savings) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
-		user.getAccount().setSavings(savings);
-		userRepository.save(user);
+		AccountHolder account = user.getAccount();
+		account.setSavings(savings);
+		aRepository.save(account);
 		return savings;
 	}
 	
@@ -153,8 +172,9 @@ public class MeritBankController {
 	@PostMapping(value = "/DBAccount")
 	public DBAccount createDBAccount(Principal token, @RequestBody DBAccount dbAccount) throws AccountExistsException, ExceedsCombinedLimitException {
 		User user = userRepository.findByUserName(token.getName()).get();
-		user.getAccount().addDBAccount(dbAccount);
-		userRepository.save(user);
+		AccountHolder account = user.getAccount();
+		account.addDBAccount(dbAccount);
+		aRepository.save(account);
 		return dbAccount;
 	}
 	
@@ -162,8 +182,9 @@ public class MeritBankController {
 	@PostMapping(value = "/CDAccount")
 	public CDAccount createCDAccount(Principal token, @RequestBody CDAccount cda) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
-		user.getAccount().addCdAccount(cda);
-		userRepository.save(user);
+		AccountHolder account = user.getAccount();
+		account.addCdAccount(cda);
+		aRepository.save(account);
 		return cda;
 	}
 	
@@ -171,8 +192,9 @@ public class MeritBankController {
 	@PostMapping(value = "/RolloverIRA")
 	public RolloverIRA createRolloverIRA(Principal token, @RequestBody RolloverIRA ira) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
-		user.getAccount().setRolloverIRA(ira);
-		userRepository.save(user);
+		AccountHolder account = user.getAccount();
+		account.setRolloverIRA(ira);
+		aRepository.save(account);
 		return ira;
 	}
 	
@@ -180,8 +202,9 @@ public class MeritBankController {
 	@PostMapping(value = "/RothIRA")
 	public RothIRA createRothIRA(Principal token, @RequestBody RothIRA ira) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
-		user.getAccount().setRothIRA(ira);
-		userRepository.save(user);
+		AccountHolder account = user.getAccount();
+		account.setRothIRA(ira);
+		aRepository.save(account);
 		return ira;
 	}
 	
@@ -189,16 +212,136 @@ public class MeritBankController {
 	@PostMapping(value = "/RegularIRA")
 	public RegularIRA createRegularIRA(Principal token, @RequestBody RegularIRA ira) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
-		user.getAccount().setRegularIRA(ira);
-		userRepository.save(user);
+		AccountHolder account = user.getAccount();
+		account.setRegularIRA(ira);
+		aRepository.save(account);
 		return ira;
+	}
+
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Delete/CheckingAccount")
+	public AccountHolder deleteCheckingAccount(Principal token) throws AccountExistsException{
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		int id = account.getChecking().getAccountNumber();
+		if(account.getSavings() == null) {
+			SavingsAccount savings = new SavingsAccount(account.getChecking().closingValue());
+			account.setSavings(savings);
+		}
+		else {
+			account.getSavings().deposit(account.getChecking().closingValue());
+		}
+		account.setChecking(null);
+		aRepository.save(account);
+		checkingRepository.deleteByaccountNumber(id);
+		return aRepository.findOne(account.getId());
 	}
 	
 	@PreAuthorize("hasAuthority('accountholder')")
-	@PostMapping(value = "/DeleteBankAccount/{id}")
-	public boolean deleteBankAccount(){
-		
-		
-		return true;
+	@PostMapping(value = "/Delete/DBAccount/{id}")
+	public AccountHolder deleteDBAccount(Principal token, @PathVariable("id") int id) throws AccountExistsException, ExceedsCombinedLimitException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		DBAccount dba = DBARepository.findOne(id);
+		int accountNumber = dba.getAccountNumber();
+		if(account.getSavings() == null) {
+			SavingsAccount savings = new SavingsAccount(dba.closingValue());
+			account.setSavings(savings);
+		}
+		else {
+			account.getSavings().deposit(dba.closingValue());
+		}
+		DBARepository.deleteByaccountNumber(accountNumber);
+		account.getDbAccount().remove(dba);
+		aRepository.save(account);
+		return account;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Delete/CDAccount/{id}")
+	public AccountHolder deleteCDAccount(Principal token, @PathVariable("id") int id) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		CDAccount cda = CDARepository.findOne(id);
+		int accountNumber = cda.getAccountNumber();
+		if(account.getSavings() == null) {
+			SavingsAccount savings = new SavingsAccount(cda.closingValue());
+			account.setSavings(savings);
+		}
+		else {
+			account.getSavings().deposit(cda.closingValue());
+		}
+		DBARepository.deleteByaccountNumber(accountNumber);
+		account.getCdAccount().remove(cda);
+		aRepository.save(account);
+		return account;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Delete/RolloverIRA")
+	public AccountHolder deleteRolloverIRA(Principal token) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		RolloverIRA rollover = rolloverRepository.findOne(account.getRolloverIRA().getAccountNumber());
+		int id = rollover.getAccountNumber();
+		if(account.getSavings() == null) {
+			SavingsAccount savings = new SavingsAccount(rollover.closingValue());
+			account.setSavings(savings);
+		}
+		else {
+			account.getSavings().deposit(rollover.closingValue());
+		}
+		rolloverRepository.deleteByaccountNumber(id);
+		account.setRolloverIRA(null);
+		aRepository.save(account);
+		return account;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Delete/RothIRA")
+	public AccountHolder deleteRothIRA(Principal token) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		RothIRA roth = rothRepository.findOne(account.getRothIRA().getAccountNumber());
+		int id = roth.getAccountNumber();
+		if(account.getSavings() == null) {
+			SavingsAccount savings = new SavingsAccount(roth.closingValue());
+			account.setSavings(savings);
+		}
+		else {
+			account.getSavings().deposit(roth.closingValue());
+		}
+		rothRepository.deleteByaccountNumber(id);
+		account.setRothIRA(null);
+		aRepository.save(account);
+		return account;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Delete/RegularIRA")
+	public AccountHolder deleteRegularIRA(Principal token) throws AccountExistsException {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		RegularIRA regular = regularRepository.findOne(account.getRegularIRA().getAccountNumber());
+		int id = regular.getAccountNumber();
+		if(account.getSavings() == null) {
+			SavingsAccount savings = new SavingsAccount(regular.closingValue());
+			account.setSavings(savings);
+		}
+		else {
+			account.getSavings().deposit(regular.closingValue());
+		}
+		regularRepository.deleteByaccountNumber(id);
+		account.setRegularIRA(null);
+		aRepository.save(account);
+		return account;
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Delete/AccountHolder")
+	public void deleteAccountHolder(Principal token) {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		aRepository.delete(account);
 	}
 }

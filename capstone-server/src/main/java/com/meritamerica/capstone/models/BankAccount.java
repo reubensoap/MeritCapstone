@@ -86,7 +86,7 @@ public abstract class BankAccount {
 	public void addTransaction(Transaction transaction) {
 		transactions.add(transaction);
 	}
-//	
+	
 //	public AccountHolder getAccount() {
 //		return account;
 //	}

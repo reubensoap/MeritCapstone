@@ -7,7 +7,8 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
+@Entity(name = "checking_account")
+@Table(name = "checking_account", catalog = "meritbank")
 public class CheckingAccount extends BankAccount{
 	
 	
