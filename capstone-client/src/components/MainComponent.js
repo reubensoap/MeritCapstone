@@ -5,12 +5,12 @@ import Footer from './FooterComponent';
 import About from './AboutComponent';
 import Accounts from './AccountsPageComponents';
 import Calculator from './CalculatorComponent';
+import Register from './RegisterComponent';
+import Login from './LoginComponent';
+import Dashboard from './dashboard';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
-import { getCdOfferings } from '../Utils/APIUtils';
-import { OFFERS } from '../Utils/testCDOfferings';
-import { connect } from 'react-redux'; 
-import { actions } from 'react-redux-form';
-import axios from 'axios';
+import { getCdOfferings, signup, getCurrentUser, ACCESS_TOKEN } from '../Utils/APIUtils';
+import PrivateRoute from '../Utils/PrivateRoute';
 
 
 class Main extends Component {
@@ -18,16 +18,16 @@ class Main extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        cdofferings: []
+        cdofferings: [],
+        isAuthenticated: true,
+        user: null
       }
       this.handleCDOfferings = this.handleCDOfferings.bind(this);
+      this.loadCurrentUser = this.loadCurrentUser.bind(this);
+      this.handleLogout = this.handleLogout.bind(this);
     }
 
     handleCDOfferings() {
-      // method getCdOffering was not working due to CORS
-      // tried axios to get information and it works, console
-      // shows the CDOffers in array. However the data does not 
-      // update outside of the .then
       getCdOfferings()
       .then(response => {
         this.setState({
@@ -37,16 +37,45 @@ class Main extends Component {
       
     }
 
+    loadCurrentUser() {
+      if(!localStorage.getItem(ACCESS_TOKEN)){
+        console.log("Not Logged In");
+      } else {
+        getCurrentUser()
+        .then(response => {
+          this.setState({
+            user: response,
+            isAuthenticated: true
+          });
+        });
+      }
+      console.log(this.state.isAuthenticated);
+    }
+
+    componentDidUpdate(prevProps, prevState){
+      if(prevState.isAuthenticated !== this.state.isAuthenticated){
+        console.log("not false")
+        console.log(this.state.isAuthenticated)
+      }
+    }
+
     componentDidMount(){
-      this.handleCDOfferings()
+      this.handleCDOfferings();
+      this.loadCurrentUser();
       console.log(this.state.cdofferings);
+      console.log(this.state.isAuthenticated);
+    }
+
+    handleLogout(){
+      localStorage.removeItem(ACCESS_TOKEN);
+      console.log("Removed Token");
     }
   
     render() {
   
       const HomePage = () => {
         return(
-          <Home />
+          <Home onLogout={this.handleLogout}/>
         );
       }
 
@@ -67,6 +96,24 @@ class Main extends Component {
           <Calculator offers={this.state.cdofferings}/>
         );
       }
+
+      const RegisterPage = () => {
+        return(
+          <Register />
+        );
+      }
+
+      const LoginPage = () => {
+        return(
+          <Login onLogin={this.loadCurrentUser}/>
+        );
+      }
+
+      const DashboardPage = () => {
+        return(
+          <Dashboard />
+        );
+      }
   
       return (
         <div>
@@ -76,6 +123,9 @@ class Main extends Component {
             <Route path="/aboutus" component={AboutPage} />
             <Route path="/accounts" component={AccountsPage} />
             <Route path="/calculator" component={CalculatorPage} />
+            <Route path="/register" component={RegisterPage} />
+            <Route path="/login" component={LoginPage} />
+            <PrivateRoute authenticated={this.state.isAuthenticated} path="/dashboard" component={DashboardPage}></PrivateRoute>
             <Redirect to="/home" />
           </Switch>
           <Footer />

@@ -1,5 +1,5 @@
 const BASE_URL = 'http://localhost:8080';
-const ACCESS_TOKEN = 'accessToken';
+export const ACCESS_TOKEN = 'accessToken';
 const CORS_ANYWHERE = 'https://cors-anywhere.herokuapp.com/';
 
 const request = (options) => {
@@ -31,4 +31,33 @@ const request = (options) => {
             method: 'GET'
         });
     }
+
+    export function signup(signupRequest) {
+        return request({
+            url: BASE_URL + "/signup",
+            method: 'POST',
+            body: JSON.stringify(signupRequest)
+        });
+    }
+
+    export function login(loginRequest) {
+        return request({
+            url: BASE_URL + "/login",
+            method: 'POST',
+            body: JSON.stringify(loginRequest)
+        });
+    }
+
+    export function getCurrentUser() {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+    
+        return request({
+            url: BASE_URL + "/AccountHolder",
+            method: 'GET'
+        });
+    }
+
+
 

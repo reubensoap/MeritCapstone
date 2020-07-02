@@ -1,7 +1,8 @@
 import React from 'react';
-import {Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle} from 'reactstrap';
+import {Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button} from 'reactstrap';
 
 function Home(props) {
+
     return(
         <div className="container-fluid">
             <div className="container">
@@ -11,6 +12,7 @@ function Home(props) {
                         <p className="gray secondary-header-text">Get paid up to 2 days early with direct deposit and grow your savings. No hidden fees. No surprises.</p>
                         <p className="tiny-text">Learn how we collect and use your information by visiting our Privacy Policy <br />Banking services provided by The Bancorp Bank or Stride Bank, N.A.; Members FDIC </p>
                         <a className="btn btn-important">Get Started</a>
+                        <Button onClick={props.onLogout}>This</Button>
                     </div>
                     <div className="col col-md-6">
                         <img src="./images/tangible-hero.png" className="img-fluid"/>
