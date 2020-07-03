@@ -14,7 +14,6 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            token: [],
             redirect: null
         }
 
@@ -28,20 +27,17 @@ class Login extends Component {
         login(loginrequest)
         .then(response => {
             localStorage.setItem(ACCESS_TOKEN, response.jwt);
-            this.setState({
-                token: response.jwt,
-                redirect: "/dashboard"
-            });
-            this.props.onLogin();
-            console.log(this.state.token);
-        });
-        alert("Current State is: " + JSON.stringify(values));
+            console.log(response.jwt);
+        })
+        .then(this.setState({ redirect: "/home" }))
+        .then(this.props.onLogin(true))
+        ;
     }
 
     render() {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />
-        }
+          }
         return(
                 <div className="container-fluid mt-5 py-5">
                     <LocalForm onSubmit={(values) => this.handleSubmit(values)}>

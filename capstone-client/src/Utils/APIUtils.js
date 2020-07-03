@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080';
+export const BASE_URL = 'http://localhost:8080';
 export const ACCESS_TOKEN = 'accessToken';
 const CORS_ANYWHERE = 'https://cors-anywhere.herokuapp.com/';
 

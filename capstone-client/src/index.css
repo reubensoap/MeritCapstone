@@ -107,6 +107,14 @@ p {
   background: none;
 }
 
+/* Dashboard */
+
+.dashboard-banner {
+  margin-top: 100px;
+  background-color: rgb(51, 167, 67);
+  color: white;
+}
+
 /* Colors */
 
 .gray {

@@ -11,33 +11,32 @@ import Dashboard from './dashboard';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { getCdOfferings, signup, getCurrentUser, ACCESS_TOKEN } from '../Utils/APIUtils';
 import PrivateRoute from '../Utils/PrivateRoute';
+import { connect } from 'react-redux';
+import { getCDOffers, fetchCD, authenticatation } from '../redux/ActionCreators';
 
+const mapStateToProps = state => {
+  return {
+    cdofferings: state.cdofferings,
+    isAuthenticated: state.isAuthenticated,
+    accountHolder: state.accountHolder
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchCD: () => {dispatch(fetchCD())},
+  authenticatation: (values) => {dispatch(authenticatation(values))}
+});
 
 class Main extends Component {
 
     constructor(props) {
       super(props);
-      this.state = {
-        cdofferings: [],
-        isAuthenticated: true,
-        user: null
-      }
-      this.handleCDOfferings = this.handleCDOfferings.bind(this);
-      this.loadCurrentUser = this.loadCurrentUser.bind(this);
+      
+      /*this.loadCurrentUser = this.loadCurrentUser.bind(this);*/
       this.handleLogout = this.handleLogout.bind(this);
     }
 
-    handleCDOfferings() {
-      getCdOfferings()
-      .then(response => {
-        this.setState({
-          cdofferings: response
-        });
-      });
-      
-    }
-
-    loadCurrentUser() {
+    /*loadCurrentUser() {
       if(!localStorage.getItem(ACCESS_TOKEN)){
         console.log("Not Logged In");
       } else {
@@ -47,23 +46,17 @@ class Main extends Component {
             user: response,
             isAuthenticated: true
           });
+          console.log(this.state.user)
         });
       }
-      console.log(this.state.isAuthenticated);
-    }
+      console.log(this.props.isAuthenticated);
+    }*/
 
-    componentDidUpdate(prevProps, prevState){
-      if(prevState.isAuthenticated !== this.state.isAuthenticated){
-        console.log("not false")
-        console.log(this.state.isAuthenticated)
-      }
-    }
-
-    componentDidMount(){
-      this.handleCDOfferings();
-      this.loadCurrentUser();
-      console.log(this.state.cdofferings);
-      console.log(this.state.isAuthenticated);
+    async componentDidMount(){
+      /*await this.loadCurrentUser();*/
+      this.props.fetchCD();
+      console.log(this.props.cdofferings);
+      console.log(this.props.isAuthenticated);
     }
 
     handleLogout(){
@@ -93,7 +86,7 @@ class Main extends Component {
 
       const CalculatorPage = () => {
         return(
-          <Calculator offers={this.state.cdofferings}/>
+          <Calculator offers={this.props.cdofferings}/>
         );
       }
 
@@ -105,13 +98,13 @@ class Main extends Component {
 
       const LoginPage = () => {
         return(
-          <Login onLogin={this.loadCurrentUser}/>
+          <Login onLogin={this.props.authenticatation}/>
         );
       }
 
       const DashboardPage = () => {
         return(
-          <Dashboard />
+          <Dashboard authen={this.props.isAuthenticated} />
         );
       }
   
@@ -125,7 +118,7 @@ class Main extends Component {
             <Route path="/calculator" component={CalculatorPage} />
             <Route path="/register" component={RegisterPage} />
             <Route path="/login" component={LoginPage} />
-            <PrivateRoute authenticated={this.state.isAuthenticated} path="/dashboard" component={DashboardPage}></PrivateRoute>
+            <Route path="/dashboard" component={DashboardPage}></Route>
             <Redirect to="/home" />
           </Switch>
           <Footer />
@@ -134,4 +127,4 @@ class Main extends Component {
     }
   }
   
-  export default withRouter((Main));
+  export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

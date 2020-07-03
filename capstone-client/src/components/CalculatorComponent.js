@@ -91,10 +91,6 @@ class Calculator extends Component {
         }
     }
 
-
-
-    
-
     render() {
 
         return(
