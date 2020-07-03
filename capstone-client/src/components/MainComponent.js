@@ -8,11 +8,11 @@ import Calculator from './CalculatorComponent';
 import Register from './RegisterComponent';
 import Login from './LoginComponent';
 import Dashboard from './dashboard';
+import CreateHolder from './CreateHolderComponent';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
-import { getCdOfferings, signup, getCurrentUser, ACCESS_TOKEN } from '../Utils/APIUtils';
-import PrivateRoute from '../Utils/PrivateRoute';
+import { ACCESS_TOKEN } from '../Utils/APIUtils';
 import { connect } from 'react-redux';
-import { getCDOffers, fetchCD, authenticatation } from '../redux/ActionCreators';
+import { fetchCD, authentication, logout, fetchHolder, addHolder} from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
   return {
@@ -24,7 +24,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCD: () => {dispatch(fetchCD())},
-  authenticatation: (values) => {dispatch(authenticatation(values))}
+  authentication: (values) => {dispatch(authentication(values))},
+  logout: (values) => {dispatch(logout(values))},
+  fetchHolder: () => {dispatch(fetchHolder())},
+  addHolder: (values) => {dispatch(addHolder(values))}
 });
 
 class Main extends Component {
@@ -32,28 +35,10 @@ class Main extends Component {
     constructor(props) {
       super(props);
       
-      /*this.loadCurrentUser = this.loadCurrentUser.bind(this);*/
       this.handleLogout = this.handleLogout.bind(this);
     }
 
-    /*loadCurrentUser() {
-      if(!localStorage.getItem(ACCESS_TOKEN)){
-        console.log("Not Logged In");
-      } else {
-        getCurrentUser()
-        .then(response => {
-          this.setState({
-            user: response,
-            isAuthenticated: true
-          });
-          console.log(this.state.user)
-        });
-      }
-      console.log(this.props.isAuthenticated);
-    }*/
-
     async componentDidMount(){
-      /*await this.loadCurrentUser();*/
       this.props.fetchCD();
       console.log(this.props.cdofferings);
       console.log(this.props.isAuthenticated);
@@ -98,13 +83,19 @@ class Main extends Component {
 
       const LoginPage = () => {
         return(
-          <Login onLogin={this.props.authenticatation}/>
+          <Login onLogin={this.props.authentication} onGetHolder={this.props.fetchHolder}/>
         );
       }
 
       const DashboardPage = () => {
         return(
-          <Dashboard authen={this.props.isAuthenticated} />
+          <Dashboard authen={this.props.isAuthenticated} onLogout={this.handleLogout} logout={this.props.logout} holder={this.props.accountHolder}/>
+        );
+      }
+
+      const CreateHolderPage = () => {
+        return(
+          <CreateHolder createHolder={this.props.addHolder}/>
         );
       }
   
@@ -119,6 +110,7 @@ class Main extends Component {
             <Route path="/register" component={RegisterPage} />
             <Route path="/login" component={LoginPage} />
             <Route path="/dashboard" component={DashboardPage}></Route>
+            <Route path="/createHolder" component={CreateHolderPage}></Route>
             <Redirect to="/home" />
           </Switch>
           <Footer />

@@ -11,6 +11,10 @@ export const MainState = (state = {
             return {...state, cdofferings: action.payload}
         case ActionTypes.AUTHEN:
             return {...state, isAuthenticated: action.payload}
+        case ActionTypes.LOGOUT:
+            return {...state, isAuthenticated: action.payload, accountHolder: null}
+        case ActionTypes.ADD_HOLDER:
+            return {...state, accountHolder: action.payload}
         default:
             return state;
     }

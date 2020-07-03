@@ -4,12 +4,12 @@ import {Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron,
     Form, FormGroup, Label, Input, Row } from 'reactstrap';
 import {NavLink} from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
-import { login , ACCESS_TOKEN} from '../Utils/APIUtils';
+import { createAccountHolder } from '../Utils/APIUtils';
 import {Redirect} from 'react-router-dom';
 
 const required = (val) => val && val.length;
 
-class Login extends Component {
+class CreateHolder extends Component {
 
     constructor(props) {
         super(props);
@@ -22,16 +22,11 @@ class Login extends Component {
 
     handleSubmit(values) {
         console.log(values);
-        const loginrequest = Object.assign({}, values);
-        console.log(loginrequest);
-        login(loginrequest)
+        createAccountHolder(values)
         .then(response => {
-            localStorage.setItem(ACCESS_TOKEN, response.jwt);
-            console.log(response.jwt);
-            this.setState({ redirect: "/home" }),
-            this.props.onLogin(true);
-            this.props.onGetHolder();
-        });
+            this.props.createHolder(response);
+        })
+        .catch(console.log("unable to create account"));
     }
 
     render() {
@@ -42,19 +37,18 @@ class Login extends Component {
                 <div className="container-fluid mt-5 py-5">
                     <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                         <div className="container p-5 update-form text-center">
-                            <h2>Merit Bank</h2>
-                            <h3>Welcome Back</h3>
-                            <p>Banking made easy</p>
+                            <h2>Finish Creating Your Account</h2>
+                            <p>All information is confidential</p>
                             <Row className="form-group">
-                                <Control.text model=".username" id="username" name="username"
-                                    placeholder="User Name"
+                                <Control.text model=".firstName" id="firstName" name="firstName"
+                                    placeholder="First Name"
                                     className="form-control"
                                     validators = {{
                                         required
                                     }} />
                                 <Errors
                                     className="text-danger"
-                                    model=".username"
+                                    model=".firstName"
                                     show="touched"
                                     messages = {{
                                         required: 'Required '
@@ -62,18 +56,39 @@ class Login extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Control type="password" model=".password" id="password" name="password"
-                                    placeholder="Password"
+                                <Control.text model=".middleName" id="middleName" name="middleName"
+                                    placeholder="Middle Name"
+                                    className="form-control"/>
+                            </Row>
+                            <Row className="form-group">
+                                <Control.text model=".lastName" id="lastName" name="lastName"
+                                    placeholder="Last Name"
                                     className="form-control"
                                     validators = {{
                                         required
                                     }} />
                                 <Errors
                                     className="text-danger"
-                                    model=".password"
+                                    model=".lastName"
                                     show="touched"
                                     messages = {{
-                                        required: 'Required ',
+                                        required: 'Required '
+                                    }}
+                                />
+                            </Row>
+                            <Row className="form-group">
+                                <Control.text model=".ssn" id="ssn" name="ssn"
+                                    placeholder="SSN#"
+                                    className="form-control"
+                                    validators = {{
+                                        required
+                                    }} />
+                                <Errors
+                                    className="text-danger"
+                                    model=".ssn"
+                                    show="touched"
+                                    messages = {{
+                                        required: 'Required '
                                     }}
                                 />
                             </Row>
@@ -89,4 +104,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default CreateHolder;

@@ -80,6 +80,11 @@ class Header extends Component {
                                             Register
                                         </NavLink>
                                     </NavItem>
+                                    <NavItem>
+                                        <NavLink className="nav-link" to="/dashboard">
+                                            Rdash
+                                        </NavLink>
+                                    </NavItem>
                                 </Nav>
                             </Collapse>
                         </Navbar>

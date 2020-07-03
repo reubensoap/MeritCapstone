@@ -59,5 +59,17 @@ const request = (options) => {
         });
     }
 
+    export function createAccountHolder(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/CreateAccount",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
 
 
