@@ -136,9 +136,49 @@ p {
   flex-direction: row;
 }
 
+.default-box {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #cccccc;
+}
+
+.default-box h3 {
+  color: rgb(128, 128, 128);
+}
+
+.dash-btn {
+  background: rgb(41, 167, 79);
+  border: 1px solid rgb(196, 196, 196);
+  color: rgb(243, 243, 243);
+  width: 100%;
+}
+
+.dash-btn:hover {
+  background: rgb(64, 148, 76);
+  border: 1px solid rgb(201, 201, 201);
+  box-shadow: 0px 0px 5px rgb(167, 167, 167);
+}
+
+.dash-btn:focus {
+  background: rgb(64, 148, 76);
+}
+
 .client-dash .side {
   flex: 1;
   box-shadow: 0px 5px 10px rgb(216, 216, 216);
+}
+
+.client-dash .side ul {
+  list-style-type: none;
+  margin:0;
+  padding:0;
+}
+
+.client-dash .side ul li {
+  margin-bottom: 10px;
 }
 
 .client-dash .content {
@@ -169,8 +209,26 @@ p {
   border-right: 1px solid rgb(139, 212, 139);
 }
 
+.inner-content .inner-side ul {
+  list-style-type: none;
+  margin-left:10px;
+  padding:0;
+}
+
+.inner-content .inner-side ul li {
+  color: #777;
+}
+
 .inner-content .inner-content {
-  flex: 4;
+  flex: 2;
+}
+
+.panel {
+  display: none;
+}
+
+.showing {
+  display: block;
 }
 
 /* Colors */

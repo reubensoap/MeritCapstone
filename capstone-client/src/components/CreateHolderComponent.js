@@ -24,9 +24,15 @@ class CreateHolder extends Component {
         console.log(values);
         createAccountHolder(values)
         .then(response => {
-            this.props.createHolder(response);
+            this.props.onGetHolder();
         })
         .catch(console.log("unable to create account"));
+    }
+
+    componentDidMount() {
+        if(this.props.holder !== null) {
+            this.setState({ redirect: "/dashboard" });
+        }
     }
 
     render() {

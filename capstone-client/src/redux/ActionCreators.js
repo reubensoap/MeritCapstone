@@ -31,3 +31,7 @@ export const authentication = (values) => ({
     type: ActionTypes.AUTHEN,
     payload:values
 });
+
+export const removeHolder = () => ({
+    type: ActionTypes.REMOVE_HOLDER
+})

@@ -15,6 +15,8 @@ export const MainState = (state = {
             return {...state, isAuthenticated: action.payload, accountHolder: null}
         case ActionTypes.ADD_HOLDER:
             return {...state, accountHolder: action.payload}
+        case ActionTypes.REMOVE_HOLDER:
+            return {...state, acountHolder: null}
         default:
             return state;
     }

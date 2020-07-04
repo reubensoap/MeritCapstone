@@ -28,10 +28,15 @@ class Login extends Component {
         .then(response => {
             localStorage.setItem(ACCESS_TOKEN, response.jwt);
             console.log(response.jwt);
-            this.setState({ redirect: "/home" }),
             this.props.onLogin(true);
             this.props.onGetHolder();
         });
+    }
+
+    componentDidMount() {
+        if(this.props.authen == true) {
+            this.setState({ redirect: "/home" });
+        }
     }
 
     render() {
@@ -78,7 +83,7 @@ class Login extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Button type="submit" color="primary">
+                                <Button className="dash-btn" type="submit" color="primary">
                                     Submit
                                 </Button>
                             </Row>

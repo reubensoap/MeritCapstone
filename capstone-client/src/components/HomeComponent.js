@@ -12,7 +12,6 @@ function Home(props) {
                         <p className="gray secondary-header-text">Get paid up to 2 days early with direct deposit and grow your savings. No hidden fees. No surprises.</p>
                         <p className="tiny-text">Learn how we collect and use your information by visiting our Privacy Policy <br />Banking services provided by The Bancorp Bank or Stride Bank, N.A.; Members FDIC </p>
                         <a className="btn btn-important">Get Started</a>
-                        <Button onClick={props.onLogout}>This</Button>
                     </div>
                     <div className="col col-md-6">
                         <img src="./images/tangible-hero.png" className="img-fluid"/>

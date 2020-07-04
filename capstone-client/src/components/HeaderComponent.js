@@ -15,6 +15,7 @@ class Header extends Component {
         this.toggleNav = this.toggleNav.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.logoutEntirely = this.logoutEntirely.bind(this);
     }
 
     toggleNav() {
@@ -34,6 +35,44 @@ class Header extends Component {
         alert("Username: " + this.username.value + " Password: " + this.password.value +
             " Remember: " + this.remember.checked);
         event.preventDefault();
+    }
+
+    logoutEntirely(){
+        this.props.logout(false);
+        this.props.onLogout();
+    }
+
+    renderAccessNav() {
+        if(this.props.authen == false){
+            return(
+                <Nav className="ml-auto" navbar>
+                    <NavItem>
+                        <NavLink className="nav-link" to="/login">
+                            Login
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className="nav-link" to="/register">
+                            Register
+                        </NavLink>
+                    </NavItem>
+                </Nav>
+            );
+            
+        } else {
+            return(
+                <Nav className="ml-auto" navbar>
+                    <NavItem>
+                        <NavLink className="nav-link" to="/dashboard">
+                            Dashboard
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <Button onClick={this.logoutEntirely}>Logout</Button>
+                    </NavItem>
+                </Nav>
+            );
+        }
     }
 
     render() {
@@ -69,23 +108,7 @@ class Header extends Component {
                                         </NavLink>
                                     </NavItem>
                                 </Nav>
-                                <Nav className="ml-auto" navbar>
-                                    <NavItem>
-                                        <NavLink className="nav-link" to="/login">
-                                            Login
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink className="nav-link" to="/register">
-                                            Register
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink className="nav-link" to="/dashboard">
-                                            Rdash
-                                        </NavLink>
-                                    </NavItem>
-                                </Nav>
+                                {this.renderAccessNav()}
                             </Collapse>
                         </Navbar>
                     </div>

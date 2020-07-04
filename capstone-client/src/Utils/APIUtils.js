@@ -71,5 +71,111 @@ const request = (options) => {
         });
     }
 
+    export function createSavingsAccount(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/SavingsAccount",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
+    export function createCheckingAccount(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/CheckingAccount",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
+    export function createCDAccount(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/CDAccount",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
+    export function createDBAccount(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/DBAccount",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
+    export function createRegIRA(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/RegularIRA",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
+    export function createRollIRA(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/RolloverIRA",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
+    export function createRothIRA(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/RothIRA",
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+    }
+
+    export function deleteChecking() {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Delete/CheckingAccount",
+            method: 'POST'
+        });
+    }
+
+    export function deleteCD(value) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Delete/CDAccount/" + value,
+            method: 'POST',
+        });
+    }
+
 
 

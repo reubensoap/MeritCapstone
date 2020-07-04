@@ -12,7 +12,7 @@ import CreateHolder from './CreateHolderComponent';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { ACCESS_TOKEN } from '../Utils/APIUtils';
 import { connect } from 'react-redux';
-import { fetchCD, authentication, logout, fetchHolder, addHolder} from '../redux/ActionCreators';
+import { fetchCD, authentication, logout, fetchHolder, addHolder, removeHolder} from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
   return {
@@ -27,7 +27,8 @@ const mapDispatchToProps = (dispatch) => ({
   authentication: (values) => {dispatch(authentication(values))},
   logout: (values) => {dispatch(logout(values))},
   fetchHolder: () => {dispatch(fetchHolder())},
-  addHolder: (values) => {dispatch(addHolder(values))}
+  addHolder: (values) => {dispatch(addHolder(values))},
+  removeHolder: () => {dispatch(removeHolder())}
 });
 
 class Main extends Component {
@@ -40,6 +41,12 @@ class Main extends Component {
 
     async componentDidMount(){
       this.props.fetchCD();
+      if(this.props.isAuthenticated == false){
+        localStorage.removeItem(ACCESS_TOKEN);
+      }
+      if(localStorage.getItem(ACCESS_TOKEN)){
+        this.props.fetchHolder();
+      }
       console.log(this.props.cdofferings);
       console.log(this.props.isAuthenticated);
     }
@@ -83,25 +90,25 @@ class Main extends Component {
 
       const LoginPage = () => {
         return(
-          <Login onLogin={this.props.authentication} onGetHolder={this.props.fetchHolder}/>
+          <Login onLogin={this.props.authentication} onGetHolder={this.props.fetchHolder} authen={this.props.isAuthenticated} holder={this.props.accountHolder}/>
         );
       }
 
       const DashboardPage = () => {
         return(
-          <Dashboard authen={this.props.isAuthenticated} onLogout={this.handleLogout} logout={this.props.logout} holder={this.props.accountHolder}/>
+          <Dashboard authen={this.props.isAuthenticated} onLogout={this.handleLogout} logout={this.props.logout} holder={this.props.accountHolder} onGetHolder={this.props.fetchHolder} onRemove={this.props.removeHolder}/>
         );
       }
 
       const CreateHolderPage = () => {
         return(
-          <CreateHolder createHolder={this.props.addHolder}/>
+          <CreateHolder createHolder={this.props.addHolder} onGetHolder={this.props.fetchHolder} holder={this.props.accountHolder} />
         );
       }
   
       return (
         <div>
-          <Header />
+          <Header authen={this.props.isAuthenticated} onLogout={this.handleLogout} logout={this.props.logout}/>
           <Switch>
             <Route path="/home" component={HomePage} />
             <Route path="/aboutus" component={AboutPage} />

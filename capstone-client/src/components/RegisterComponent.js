@@ -33,10 +33,10 @@ class Register extends Component {
         const loginrequest = Object.assign({}, values);
         signup(loginrequest)
         .then(response => {
-            this.setState({ redirect: "/home" });
+            this.setState({ redirect: "/login" });
             console.log(response);
         });
-        alert("Current State is: " + JSON.stringify(values));
+        alert("Logins Below: \n\nUserName: " + values.userName + " Password: " + values.password + "\n\nPlease keep logins safe");
     }
 
     render() {
@@ -85,7 +85,7 @@ class Register extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Button type="submit" color="primary">
+                                <Button className="dash-btn" type="submit" color="primary">
                                     Submit
                                 </Button>
                             </Row>
