@@ -120,7 +120,7 @@ class Main extends Component {
             <Route path="/createHolder" component={CreateHolderPage}></Route>
             <Redirect to="/home" />
           </Switch>
-          <Footer />
+          <Footer authen={this.props.isAuthenticated} onLogout={this.handleLogout} logout={this.props.logout}/>
         </div>
       );
     }

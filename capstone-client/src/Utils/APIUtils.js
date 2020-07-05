@@ -177,5 +177,49 @@ const request = (options) => {
         });
     }
 
+    export function deleteDB(value) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Delete/DBAccount/" + value,
+            method: 'POST',
+        });
+    }
+
+    export function deleteReg() {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Delete/RegularIRA",
+            method: 'POST',
+        });
+    }
+
+    export function deleteRoll() {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Delete/RolloverIRA",
+            method: 'POST',
+        });
+    }
+
+    export function deleteRoth() {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Delete/RothIRA",
+            method: 'POST',
+        });
+    }
+
 
 

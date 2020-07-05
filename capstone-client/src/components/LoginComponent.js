@@ -14,10 +14,19 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            redirect: null
+            redirect: null,
+            errorMessage: "",
+            isModalOpen: false
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+    }
+
+    toggleModal(){
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        });
     }
 
     handleSubmit(values) {
@@ -30,6 +39,13 @@ class Login extends Component {
             console.log(response.jwt);
             this.props.onLogin(true);
             this.props.onGetHolder();
+        })
+        .catch( cds => {
+            this.setState({
+                errorMessage: cds.message
+            });
+            this.toggleModal();
+            console.log(cds);
         });
     }
 
@@ -89,6 +105,19 @@ class Login extends Component {
                             </Row>
                         </div>
                     </LocalForm>
+                    <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                        <ModalHeader className="modal-head">Something went wrong</ModalHeader>
+                        <ModalBody>
+                            <LocalForm>
+                                <div className="modal-row">
+                                    <p>{this.state.errorMessage}</p>
+                                </div>
+                                <div className="modal-row">
+                                    <Button onClick={this.toggleModal}>Try again</Button>
+                                </div>
+                            </LocalForm>
+                        </ModalBody>
+                    </Modal>
                 </div>
         );
     }

@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { Row, Label, Col, Button, Card ,CardBody, Collapse, CardHeader, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import { createSavingsAccount, createCheckingAccount, createCDAccount, createDBAccount, createRegIRA, createRollIRA, createRothIRA
-    , deleteChecking, deleteCD } from '../Utils/APIUtils';
+    , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth } from '../Utils/APIUtils';
 import { OFFERS } from '../Utils/testCDOfferings';
 import { LocalForm, Control, Errors } from 'react-redux-form';
 import { Link, Redirect } from 'react-router-dom';
@@ -18,15 +18,18 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             redirect: null,
+            accountToDelete: "",
 
             isCheckingOpen: false,
             isSavingsOpen: false,
             isCDOpen: false,
             isCDDeleteOpen: false,
             isdbOpen: false,
+            isDBDeleteOpen: false,
             isRegIRAOpen: false,
             isRollIRAOpen: false,
             isRothIRAOpen: false,
+            isDeleteAccountOpen: false,
 
             defaultShow: true,
             savingsShow: false,
@@ -47,9 +50,14 @@ class Dashboard extends Component {
         this.toggleCDAccount = this.toggleCDAccount.bind(this);
         this.toggleCDDelete = this.toggleCDDelete.bind(this);
         this.toggleDBAccount = this.toggleDBAccount.bind(this);
+        this.toggleDBDelete = this.toggleDBDelete.bind(this);
         this.toggleRegIRA = this.toggleRegIRA.bind(this);
         this.toggleRollIRA = this.toggleRollIRA.bind(this);
         this.toggleRothIRA = this.toggleRothIRA.bind(this);
+        this.toggleDeleteAccount = this.toggleDeleteAccount.bind(this);
+        this.toggleDeleteAccount2 = this.toggleDeleteAccount2.bind(this);
+        this.toggleDeleteAccount3 = this.toggleDeleteAccount3.bind(this);
+        this.toggleDeleteAccount4 = this.toggleDeleteAccount4.bind(this);
 
         this.renderHeader = this.renderHeader.bind(this);
         this.renderSavingsTag = this.renderSavingsTag.bind(this);
@@ -58,7 +66,11 @@ class Dashboard extends Component {
         this.handleToggle = this.handleToggle.bind(this);
 
         this.handleDeleteChecking = this.handleDeleteChecking.bind(this);
+        this.handleDeleteReg = this.handleDeleteReg.bind(this);
+        this.handleDeleteRoll = this.handleDeleteRoll.bind(this);
+        this.handleDeleteRoth = this.handleDeleteRoth.bind(this);
         this.handleDeleteCD = this.handleDeleteCD.bind(this);
+        this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
     }
 
     /* Toggle Modals ***************************** */
@@ -93,6 +105,12 @@ class Dashboard extends Component {
         });
     }
 
+    toggleDBDelete() {
+        this.setState({
+            isDBDeleteOpen: !this.state.isDBDeleteOpen
+        });
+    }
+
     toggleRegIRA(){
         this.setState({
             isRegIRAOpen: !this.state.isRegIRAOpen
@@ -108,6 +126,34 @@ class Dashboard extends Component {
     toggleRothIRA() {
         this.setState({
             isRothIRAOpen: !this.state.isRothIRAOpen
+        });
+    }
+
+    toggleDeleteAccount() {
+        this.setState({
+            isDeleteAccountOpen: !this.state.isDeleteAccountOpen,
+            accountToDelete: "checking"
+        });
+    }
+
+    toggleDeleteAccount2() {
+        this.setState({
+            isDeleteAccountOpen: !this.state.isDeleteAccountOpen,
+            accountToDelete: "reg"
+        });
+    }
+
+    toggleDeleteAccount3() {
+        this.setState({
+            isDeleteAccountOpen: !this.state.isDeleteAccountOpen,
+            accountToDelete: "roth"
+        });
+    }
+
+    toggleDeleteAccount4() {
+        this.setState({
+            isDeleteAccountOpen: !this.state.isDeleteAccountOpen,
+            accountToDelete: "roll"
         });
     }
 
@@ -232,6 +278,62 @@ class Dashboard extends Component {
         .then(cds => {
             this.getHolderAgain();
         });
+    }
+
+    handleDeleteDB(value) {
+        deleteDB(value.accountNumber)
+        .then(response => {
+            console.log(response);
+        })
+        .then(cds => {
+            this.getHolderAgain();
+        });
+    }
+
+    handleDeleteReg(){
+        deleteReg()
+        .then(response => {
+            console.log(response);
+        })
+        .then(cds => {
+            this.getHolderAgain();
+        });
+    }
+
+    handleDeleteRoll(){
+        deleteRoll()
+        .then(response => {
+            console.log(response);
+        })
+        .then(cds => {
+            this.getHolderAgain();
+        });
+    }
+
+    handleDeleteRoth() {
+        deleteRoth()
+        .then(response => {
+            console.log(response);
+        })
+        .then(cds => {
+            this.getHolderAgain();
+        });
+    }
+
+    handleDeleteAccount(value) {
+        if(value == "checking"){
+            this.handleDeleteChecking();
+        }
+        if(value == "reg"){
+            this.handleDeleteReg();
+        }
+        if(value == "roth"){
+            this.handleDeleteRoth();
+        }
+        if(value == "roll"){
+            this.handleDeleteRoll();
+        }
+        console.log(this.state.accountToDelete);
     }
 
     /* Aside Buttons ************************************ */
@@ -431,15 +533,16 @@ class Dashboard extends Component {
             } else {
                 return (
                     <div id="savingsContent" className={`panel ${savingsShow ? 'showing' : ''}`}>
-                        <div className="content-header p-2 text-white mb-2">
+                        <div className="content-header text-white mb-2 savings-header-spacer">
                             <p className="mr-2 tags">Savings Account</p>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
                                 <ul>
-                                    <li>Savings Account {this.props.holder.savings.accountNumber}</li>
-                                    <li>Balance: {this.props.holder.savings.balance}</li>
-                                    <li>Interest Rate: {this.props.holder.savings.interestRate}</li>
+                                    <li>Account ({this.props.holder.savings.accountNumber})</li>
+                                    <li>Balance: ${this.props.holder.savings.balance}</li>
+                                    <li>Interest Rate: {this.props.holder.savings.interestRate}%</li>
+                                    <li>Creation Date: {this.props.holder.savings.accoutStartDate}</li>
                                 </ul>
                             </div>
                             <div className="inner-content">
@@ -464,14 +567,15 @@ class Dashboard extends Component {
                     <div className={`panel ${checkingShow ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Checking Account</p>
-                            <Button onClick={this.handleDeleteChecking}>Delete</Button>
+                            <Button onClick={this.toggleDeleteAccount}>Delete</Button>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
                                 <ul>
-                                    <li>Checking Account {this.props.holder.checking.accountNumber}</li>
-                                    <li>Checking Balance {this.props.holder.checking.balance}</li>
-                                    <li>Checking Interest Rate {this.props.holder.checking.interestRate}</li>
+                                    <li>Account ({this.props.holder.checking.accountNumber})</li>
+                                    <li>Balance: ${this.props.holder.checking.balance}</li>
+                                    <li>Interest Rate: {this.props.holder.checking.interestRate}%</li>
+                                    <li>Creation Date: {this.props.holder.checking.accoutStartDate}</li>
                                 </ul>
                             </div>
                             <div className="inner-content">
@@ -496,13 +600,15 @@ class Dashboard extends Component {
                     <div className={`panel ${regIRAShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Standard IRA Account</p>
+                            <Button onClick={this.toggleDeleteAccount2}>Delete</Button>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
                                 <ul>
-                                    <li>IRA Account {this.props.holder.regularIRA.accountNumber}</li>
-                                    <li>IRA Balance {this.props.holder.regularIRA.balance}</li>
-                                    <li>IRA Interest Rate {this.props.holder.regularIRA.interestRate}</li>
+                                    <li>Account ({this.props.holder.regularIRA.accountNumber})</li>
+                                    <li>Balance: ${this.props.holder.regularIRA.balance}</li>
+                                    <li>Interest Rate: {this.props.holder.regularIRA.interestRate}%</li>
+                                    <li>Creation Date: {this.props.holder.regularIRA.accoutStartDate}</li>
                                 </ul>
                             </div>
                             <div className="inner-content">
@@ -527,13 +633,15 @@ class Dashboard extends Component {
                     <div className={`panel ${rollIRAShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Rollover IRA Account</p>
+                            <Button onClick={this.toggleDeleteAccount4}>Delete</Button>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
                                 <ul>
-                                    <li>Rollover IRA Account {this.props.holder.rolloverIRA.accountNumber}</li>
-                                    <li>Rollover IRA Balance {this.props.holder.rolloverIRA.balance}</li>
-                                    <li>Rollover IRA Interest Rate {this.props.holder.rolloverIRA.interestRate}</li>
+                                    <li>Account ({this.props.holder.rolloverIRA.accountNumber})</li>
+                                    <li>Balance: ${this.props.holder.rolloverIRA.balance}</li>
+                                    <li>Interest Rate: {this.props.holder.rolloverIRA.interestRate}%</li>
+                                    <li>Creation Date: {this.props.holder.rolloverIRA.accoutStartDate}</li>
                                 </ul>
                             </div>
                             <div className="inner-content">
@@ -558,13 +666,15 @@ class Dashboard extends Component {
                     <div className={`panel ${rothIRAShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Roth IRA Account</p>
+                            <Button onClick={this.toggleDeleteAccount3}>Delete</Button>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
                                 <ul>
-                                    <li>Roth IRA Account {this.props.holder.rothIRA.accountNumber}</li>
-                                    <li>Roth IRA Balance {this.props.holder.rothIRA.balance}</li>
-                                    <li>Roth IRA Interest Rate {this.props.holder.rothIRA.interestRate}</li>
+                                    <li>Account ({this.props.holder.rothIRA.accountNumber})</li>
+                                    <li>Balance: ${this.props.holder.rothIRA.balance}</li>
+                                    <li>Interest Rate: {this.props.holder.rothIRA.interestRate}%</li>
+                                    <li>Creation Date: {this.props.holder.rothIRA.accoutStartDate}</li>
                                 </ul>
                             </div>
                             <div className="inner-content">
@@ -595,9 +705,13 @@ class Dashboard extends Component {
     renderCDListItems() {
         const cdList = this.props.holder.cdAccount.map((cdaccount) => {
             return(
-                <li>
-                    <p>account balance {cdaccount.balance}</p>
-                </li>
+                <ul>
+                    <li>Account ({cdaccount.accountNumber})</li>
+                    <li>Balance: ${cdaccount.balance}</li>
+                    <li>Interest Rate: {cdaccount.interestRate}%</li>
+                    <li>Term: {cdaccount.term}</li>
+                    <li>Creation Date: {cdaccount.accoutStartDate}</li>
+                </ul>
             );
         })
 
@@ -620,10 +734,8 @@ class Dashboard extends Component {
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
-                                <ul>
-                                    {this.renderCDListItems()}
-                                </ul>
-                                <Button onClick={this.toggleCDAccount}>Add CD Account</Button>
+                                {this.renderCDListItems()}
+                                <Button className="dash-btn" onClick={this.toggleCDAccount}>Add CD Account</Button>
                             </div>
                             <div className="inner-content">
 
@@ -638,9 +750,13 @@ class Dashboard extends Component {
     renderDBListItems() {
         const dbList = this.props.holder.dbAccount.map((dbaccount) => {
             return(
-                <li>
-                    <p>account balance {dbaccount.balance}</p>
-                </li>
+                <ul>
+                    <li>Account ({dbaccount.accountNumber})</li>
+                    <li>Company Name: {dbaccount.companyName}</li>
+                    <li>Balance: ${dbaccount.balance}</li>
+                    <li>Interest Rate: {dbaccount.interestRate}%</li>
+                    <li>Creation Date: {dbaccount.accoutStartDate}</li>
+                </ul>
             );
         })
 
@@ -659,13 +775,12 @@ class Dashboard extends Component {
                     <div className={`panel ${dbShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">DB Accounts</p>
+                            <Button onClick={this.toggleDBDelete}>Delete</Button>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
-                                <ul>
-                                    {this.renderDBListItems()}
-                                </ul>
-                                <Button onClick={this.toggleDBAccount}>Add DB Account</Button>
+                                {this.renderDBListItems()}
+                                <Button className="dash-btn" onClick={this.toggleDBAccount}>Add DB Account</Button>
                             </div>
                             <div className="inner-content">
 
@@ -688,6 +803,19 @@ class Dashboard extends Component {
         })
 
         return cdList;
+    }
+
+    renderDBAccountOptions() {
+        if(this.props.holder == null) {
+            return <option>1</option>
+        }
+        const dbList = this.props.holder.dbAccount.map((dbaccount) => {
+            return(
+                <option>{dbaccount.accountNumber}</option>
+            );
+        })
+
+        return dbList;
     }
 
     /* Final Render **************************************** */
@@ -773,8 +901,8 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -824,8 +952,8 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col >
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -893,8 +1021,8 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -946,7 +1074,7 @@ class Dashboard extends Component {
                             <Row className="form-group">
                                <Label htmlFor="companyName" md={2}>Company Name</Label>
                                 <Control.text model=".companyName" type="text" id="companyName" name="companyName"
-                                    placeholder="0.01" 
+                                    placeholder="Company Name" 
                                     className="form-control mx-3" 
                                     validators={{
                                         required
@@ -962,8 +1090,8 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -1013,8 +1141,8 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -1064,8 +1192,8 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -1115,8 +1243,8 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -1133,12 +1261,13 @@ class Dashboard extends Component {
                             <Label htmlFor="accountNumber" md={2}>Rating</Label>
                                 <Control.select model=".accountNumber" name="accountNumber" 
                                     className="form-control mx-3" >
+                                    <option>Choose Id</option>
                                     {this.renderCDAccountOptions()}
                                 </Control.select>
                             </Row>
                             <Row className="form-group">
-                                <Col md={{size:10, offset:0}}>
-                                    <Button type="submit" color="primary">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
                                         Submit
                                     </Button>
                                 </Col>
@@ -1146,7 +1275,48 @@ class Dashboard extends Component {
                         </LocalForm>
                     </ModalBody>
                 </Modal>
+
+                <Modal isOpen={this.state.isDBDeleteOpen} toggle={this.toggleDBDelete}>
+                    <ModalHeader>Delete DB Account</ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(value) => this.handleDeleteDB(value)}>
+                            <Row className="form-group">
+                            <Label htmlFor="accountNumber" md={2}>Rating</Label>
+                                <Control.select model=".accountNumber" name="accountNumber" 
+                                    className="form-control mx-3" >
+                                    <option>Choose Id</option>
+                                    {this.renderDBAccountOptions()}
+                                </Control.select>
+                            </Row>
+                            <Row className="form-group">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
+                                        Submit
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.isDeleteAccountOpen} toggle={this.toggleDeleteAccount}>
+                    <ModalHeader className="modal-head">Sure you want to delete?</ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => this.handleDeleteAccount(this.state.accountToDelete)}>
+                            <div className="modal-row">
+                                <Button type="submit">
+                                    Yes
+                                </Button>
+                                <Button onClick={this.toggleDeleteAccount}>No</Button>
+                            </div>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+
+
             </div>
+
+            
             
         );
     }

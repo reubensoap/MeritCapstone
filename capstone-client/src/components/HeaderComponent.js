@@ -79,7 +79,7 @@ class Header extends Component {
         return(
             <React.Fragment>
                 <div className="container-fluid fixed-top trans-white">
-                    <div className="container">
+                    <div className="container-fluid">
                         <Navbar light expand="md">
                             <NavbarToggler onClick={this.toggleNav} />
                             <NavbarBrand className="mr-auto" href="/">
@@ -88,7 +88,7 @@ class Header extends Component {
                             <Collapse isOpen={this.state.isNavOpen} navbar>
                                 <Nav navbar>
                                     <NavItem>
-                                        <NavLink className="nav-link" to="/home">
+                                        <NavLink className="nav-link nav-link-custom" to="/home">
                                             Home
                                         </NavLink>
                                     </NavItem>

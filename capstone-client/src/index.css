@@ -92,6 +92,24 @@ p {
   font-weight: 600;
 }
 
+.modal-row {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-row Button:nth-child(1){
+  margin-right: 10px;
+  background-color: rgb(228, 3, 3);
+}
+
+.modal-head {
+  display: flex;
+  justify-content: center;
+}
+
+
+/* Calculator ******** */
+
 .calc-form {
   width: 60%;
   margin: auto;
@@ -124,6 +142,12 @@ p {
 }
 
 /* Dashboard */
+
+.savings-header-spacer {
+  padding-bottom: 18px;
+  padding-top: 18px;
+  padding-left: 9px;
+}
 
 .dashboard-banner {
   margin-top: 100px;
@@ -190,6 +214,7 @@ p {
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  justify-content: space-between;
   background-color: rgb(51, 167, 67);
 }
 
@@ -207,16 +232,38 @@ p {
 .inner-content .inner-side {
   flex: 1;
   border-right: 1px solid rgb(139, 212, 139);
+  padding-right: 10px;
 }
 
 .inner-content .inner-side ul {
   list-style-type: none;
-  margin-left:10px;
-  padding:0;
+  padding-left: 0;
+  width: 100%;
+  background-color: rgb(230, 230, 230);
+  border-radius: 5px;
+  border-right: 1px solid rgb(224, 224, 224);
+  border-bottom: 1px solid rgb(224, 224, 224);
+  margin-bottom: 10px;
 }
 
 .inner-content .inner-side ul li {
   color: #777;
+  padding-left: 10px;
+}
+
+.inner-content .inner-side ul li:nth-child(1) {
+  background-color: rgba(0, 0, 0, 0.199);
+  padding-bottom: 5px;
+  padding-top: 5px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.inner-content .inner-side ul li:nth-last-child(1) {
+  color: rgb(187, 187, 187);
+  font-size: 0.8rem;
+  padding-top: 10px;
+  padding-bottom: 3px;
 }
 
 .inner-content .inner-content {
@@ -247,4 +294,18 @@ p {
 
 .color-primary {
   background: rgb(22, 138, 57);
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+
+.nav-link:focus, .nav-link:active, .nav-link:hover {
+  color: rgb(85, 173, 85)!important;
+}
+
+.nav-link.active {
+  color: rgb(85, 173, 85)!important;
 }
