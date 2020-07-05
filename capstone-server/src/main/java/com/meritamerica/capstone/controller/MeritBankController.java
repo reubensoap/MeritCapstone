@@ -35,15 +35,19 @@ import com.meritamerica.capstone.models.AccountHolder;
 import com.meritamerica.capstone.models.AccountHoldersContactDetails;
 import com.meritamerica.capstone.models.AuthenticationRequest;
 import com.meritamerica.capstone.models.AuthenticationResponse;
+import com.meritamerica.capstone.models.BankAccount;
 import com.meritamerica.capstone.models.CDAccount;
 import com.meritamerica.capstone.models.CDOffering;
 import com.meritamerica.capstone.models.CheckingAccount;
 import com.meritamerica.capstone.models.DBAccount;
+import com.meritamerica.capstone.models.Deposit;
 import com.meritamerica.capstone.models.RegularIRA;
 import com.meritamerica.capstone.models.RolloverIRA;
 import com.meritamerica.capstone.models.RothIRA;
 import com.meritamerica.capstone.models.SavingsAccount;
+import com.meritamerica.capstone.models.Transfer;
 import com.meritamerica.capstone.models.User;
+import com.meritamerica.capstone.models.Withdraw;
 import com.meritamerica.capstone.repository.AccountHolderContactdetailsRepository;
 import com.meritamerica.capstone.repository.AccountHolderRepository;
 import com.meritamerica.capstone.repository.BankAccountRepository;
@@ -271,7 +275,7 @@ public class MeritBankController {
 		else {
 			account.getSavings().deposit(cda.closingValue());
 		}
-		DBARepository.deleteByaccountNumber(accountNumber);
+		CDARepository.deleteByaccountNumber(accountNumber);
 		account.getCdAccount().remove(cda);
 		aRepository.save(account);
 		return account;
@@ -343,5 +347,41 @@ public class MeritBankController {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		aRepository.delete(account);
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Transfer/{type}/{from}/{to}/{amount}")
+	public void transfer(Principal token, @PathVariable("type") String type, @PathVariable("from") int source,
+			@PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		Transfer trans = new Transfer(source, target, amount, type);
+		account.findAccount(source).withdraw(amount);
+		account.findAccount(target).deposit(amount);
+		account.findAccount(source).addTransaction(trans);
+		account.findAccount(target).addTransaction(trans);
+		aRepository.save(account);
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Withdraw/{type}/{to}/{amount}")
+	public void withdraw(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		Withdraw trans = new Withdraw(target, amount, type);
+		account.findAccount(target).withdraw(amount);
+		account.findAccount(target).addTransaction(trans);
+		aRepository.save(account);
+	}
+	
+	@PreAuthorize("hasAuthority('accountholder')")
+	@PostMapping(value = "/Deposit/{type}/{to}/{amount}")
+	public void deposit(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound {
+		User user = userRepository.findByUserName(token.getName()).get();
+		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		Deposit trans = new Deposit(target, amount, type);
+		account.findAccount(target).deposit(amount);
+		account.findAccount(target).addTransaction(trans);
+		aRepository.save(account);
 	}
 }

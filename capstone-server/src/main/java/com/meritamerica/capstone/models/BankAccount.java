@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Table(name="bank_account")
 public abstract class BankAccount {
 	
 	protected double balance;
@@ -32,11 +31,9 @@ public abstract class BankAccount {
 	@Column(name = "bank_account_id")
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	protected Integer accountNumber;
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JsonIgnore
-//	@JoinColumn
-//	private AccountHolder account;
+
 	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
 	private List<Transaction> transactions;
 
 	
@@ -87,13 +84,6 @@ public abstract class BankAccount {
 		transactions.add(transaction);
 	}
 	
-//	public AccountHolder getAccount() {
-//		return account;
-//	}
-//
-//	public void setAccount(AccountHolder account) {
-//		this.account = account;
-//	}
 
 	public boolean withdraw(double amount) {
 		if(amount > 0 && amount < balance) {

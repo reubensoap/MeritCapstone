@@ -19,6 +19,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritamerica.capstone.exception.AccountExistsException;
 import com.meritamerica.capstone.exception.ExceedsCombinedLimitException;
+import com.meritamerica.capstone.exception.InformationNotfound;
 
 @Entity
 @Table(name = "account_holders", catalog = "meritbank")
@@ -201,4 +202,27 @@ public class AccountHolder{
 		this.user = user;
 	}
 
+	public BankAccount findAccount(int id) throws InformationNotfound {
+		if(checking.getAccountNumber() == id) {
+			return checking;
+		}
+		if(savings.getAccountNumber() == id) {
+			return savings;
+		}
+		if(regularIRA.getAccountNumber() == id) {
+			return regularIRA;
+		}
+		if(rolloverIRA.getAccountNumber() == id) {
+			return rolloverIRA;
+		}
+		if(rothIRA.getAccountNumber() == id) {
+			return rothIRA;
+		}
+		for(int i = 0; i < dbAccounts.size(); i++) {
+			if(dbAccounts.get(i).getAccountNumber() == id) {
+				return dbAccounts.get(i);
+			}
+		}
+		throw new InformationNotfound("Account not found.");
+	}
 }
