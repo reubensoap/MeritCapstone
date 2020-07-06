@@ -1,5 +1,14 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import {Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button} from 'reactstrap';
+
+function RenderUserOptions({obj}){
+    if(obj == true){
+        return(<Link className="btn btn-important" to="/dashboard">See Accounts</Link>);
+    } else {
+        return(<Link className="btn btn-important" to="/register">Get Started</Link>);
+    }
+}
 
 function Home(props) {
 
@@ -11,7 +20,7 @@ function Home(props) {
                         <h2 className="biggest-header-text pb-3">Banking made awesome</h2>
                         <p className="gray secondary-header-text">Get paid up to 2 days early with direct deposit and grow your savings. No hidden fees. No surprises.</p>
                         <p className="tiny-text">Learn how we collect and use your information by visiting our Privacy Policy <br />Banking services provided by The Bancorp Bank or Stride Bank, N.A.; Members FDIC </p>
-                        <a className="btn btn-important">Get Started</a>
+                        <RenderUserOptions obj={props.authen}/>
                     </div>
                     <div className="col col-md-6">
                         <img src="./images/tangible-hero.png" className="img-fluid"/>

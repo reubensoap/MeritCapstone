@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { Row, Label, Col, Button, Card ,CardBody, Collapse, CardHeader, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import { createSavingsAccount, createCheckingAccount, createCDAccount, createDBAccount, createRegIRA, createRollIRA, createRothIRA
-    , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth, deposit } from '../Utils/APIUtils';
+    , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth, deposit, withdraw, transfer } from '../Utils/APIUtils';
 import { OFFERS } from '../Utils/testCDOfferings';
 import { LocalForm, Control, Errors } from 'react-redux-form';
 import { Link, Redirect } from 'react-router-dom';
@@ -20,6 +20,8 @@ class Dashboard extends Component {
             redirect: null,
             accountToDelete: "",
             accountToDeposit: "",
+            transactionType: "",
+            transferFrom: "",
 
             isCheckingOpen: false,
             isSavingsOpen: false,
@@ -31,7 +33,10 @@ class Dashboard extends Component {
             isRollIRAOpen: false,
             isRothIRAOpen: false,
             isDeleteAccountOpen: false,
-            isDepositAccountOpen: false,
+            isTransactionAccountOpen: false,
+            isTransactionAccountOpen2: false,
+            isTransactionAccountOpen3: false,
+            isTransactionAccountOpen4: false,
 
             defaultShow: true,
             savingsShow: false,
@@ -40,7 +45,7 @@ class Dashboard extends Component {
             dbShowing: false,
             regIRAShowing: false,
             rollIRAShowing: false,
-            rothIRAShowing: false
+            rothIRAShowing: false,
         }
         this.authenCheck = this.authenCheck.bind(this);
         this.logoutEntirely = this.logoutEntirely.bind(this);
@@ -61,7 +66,27 @@ class Dashboard extends Component {
         this.toggleDeleteAccount3 = this.toggleDeleteAccount3.bind(this);
         this.toggleDeleteAccount4 = this.toggleDeleteAccount4.bind(this);
         this.toggleDepositSavings = this.toggleDepositSavings.bind(this);
-        this.toggleDeposit = this.toggleDeposit.bind(this);
+        this.toggleDepositChecking = this.toggleDepositChecking.bind(this);
+        this.toggleDepositReg = this.toggleDepositReg.bind(this);
+        this.toggleDepositRoll = this.toggleDepositRoll.bind(this);
+        this.toggleDepositRoth = this.toggleDepositRoth.bind(this);
+        this.toggleWithdrawSavings = this.toggleWithdrawSavings.bind(this);
+        this.toggleWithdrawChecking = this.toggleWithdrawChecking.bind(this);
+        this.toggleWithdrawReg = this.toggleWithdrawReg.bind(this);
+        this.toggleWithdrawRoll = this.toggleWithdrawRoll.bind(this);
+        this.toggleWithdrawRoth = this.toggleWithdrawRoth.bind(this);
+        this.toggleDepositDB = this.toggleDepositDB.bind(this);
+        this.toggleWithdrawDB = this.toggleWithdrawDB.bind(this);
+        this.toggleTransferSavings = this.toggleTransferSavings.bind(this);
+        this.toggleTransferChecking = this.toggleTransferChecking.bind(this);
+        this.toggleTransferDB = this.toggleTransferDB.bind(this);
+        this.toggleTransferReg = this.toggleTransferReg.bind(this);
+        this.toggleTransferRoll = this.toggleTransferRoll.bind(this);
+        this.toggleTransferRoth = this.toggleTransferRoth.bind(this);
+        this.toggleTransaction = this.toggleTransaction.bind(this);
+        this.toggleTransaction2 = this.toggleTransaction2.bind(this);
+        this.toggleTransaction3 = this.toggleTransaction3.bind(this);
+        this.toggleTransaction4 = this.toggleTransaction4.bind(this);
 
         this.renderHeader = this.renderHeader.bind(this);
         this.renderSavingsTag = this.renderSavingsTag.bind(this);
@@ -76,10 +101,13 @@ class Dashboard extends Component {
         this.handleDeleteCD = this.handleDeleteCD.bind(this);
         this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
         this.handleDeposit = this.handleDeposit.bind(this);
+        this.handleWithdraw = this.handleWithdraw.bind(this);
+        this.handleTransfer = this.handleTransfer.bind(this);
         this.handleDepositFilter = this.handleDepositFilter.bind(this);
     }
 
     /* Toggle Modals ***************************** */
+
 
     toggleChecking() {
         this.setState({
@@ -99,24 +127,6 @@ class Dashboard extends Component {
         });
     }
 
-    toggleCDDelete() {
-        this.setState({
-            isCDDeleteOpen: !this.state.isCDDeleteOpen
-        });
-    }
-
-    toggleDBAccount() {
-        this.setState({
-            isdbOpen: !this.state.isdbOpen
-        });
-    }
-
-    toggleDBDelete() {
-        this.setState({
-            isDBDeleteOpen: !this.state.isDBDeleteOpen
-        });
-    }
-
     toggleRegIRA(){
         this.setState({
             isRegIRAOpen: !this.state.isRegIRAOpen
@@ -132,6 +142,26 @@ class Dashboard extends Component {
     toggleRothIRA() {
         this.setState({
             isRothIRAOpen: !this.state.isRothIRAOpen
+        });
+    }
+
+    /* Deletion Toggles */
+
+    toggleCDDelete() {
+        this.setState({
+            isCDDeleteOpen: !this.state.isCDDeleteOpen
+        });
+    }
+
+    toggleDBAccount() {
+        this.setState({
+            isdbOpen: !this.state.isdbOpen
+        });
+    }
+
+    toggleDBDelete() {
+        this.setState({
+            isDBDeleteOpen: !this.state.isDBDeleteOpen
         });
     }
 
@@ -163,16 +193,173 @@ class Dashboard extends Component {
         });
     }
 
-    toggleDeposit() {
+    /* Transaction Toggles */
+
+    toggleTransaction() {
         this.setState({
-            isDepositAccountOpen: !this.state.isDepositAccountOpen
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen
+        });
+    }
+
+    toggleTransaction2() {
+        this.setState({
+            isTransactionAccountOpen2: !this.state.isTransactionAccountOpen2
+        });
+    }
+
+    toggleTransaction3() {
+        this.setState({
+            isTransactionAccountOpen3: !this.state.isTransactionAccountOpen3
+        });
+    }
+
+    toggleTransaction4() {
+        this.setState({
+            isTransactionAccountOpen4: !this.state.isTransactionAccountOpen4
         });
     }
 
     toggleDepositSavings() {
         this.setState({
-            isDepositAccountOpen: !this.state.isDepositAccountOpen,
-            accountToDeposit: "savings"
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "savings",
+            transactionType: "deposit"
+        });
+    }
+
+    toggleDepositChecking() {
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "checking",
+            transactionType: "deposit"
+        });
+    }
+
+    toggleDepositDB() {
+        this.setState({
+            isTransactionAccountOpen2: !this.state.isTransactionAccountOpen2,
+            accountToDeposit: "db",
+            transactionType: "deposit"
+        });
+    }
+
+    toggleDepositReg() {
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "reg",
+            transactionType: "deposit"
+        });
+    }
+
+    toggleDepositRoll() {
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "roll",
+            transactionType: "deposit"
+        });
+    }
+
+    toggleDepositRoth() {
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "roth",
+            transactionType: "deposit"
+        });
+    }
+
+    toggleWithdrawSavings(){
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "savings",
+            transactionType: "withdraw"
+        });
+    }
+
+    toggleWithdrawChecking(){
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "checking",
+            transactionType: "withdraw"
+        });
+    }
+
+    toggleWithdrawDB(){
+        this.setState({
+            isTransactionAccountOpen2: !this.state.isTransactionAccountOpen2,
+            accountToDeposit: "db",
+            transactionType: "withdraw"
+        });
+    }
+
+    toggleWithdrawReg(){
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "reg",
+            transactionType: "withdraw"
+        });
+    }
+
+    toggleWithdrawRoll(){
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "roll",
+            transactionType: "withdraw"
+        });
+    }
+
+    toggleWithdrawRoth(){
+        this.setState({
+            isTransactionAccountOpen: !this.state.isTransactionAccountOpen,
+            accountToDeposit: "roth",
+            transactionType: "withdraw"
+        });
+    }
+
+    toggleTransferSavings(){
+        this.setState({
+            isTransactionAccountOpen3: !this.state.isTransactionAccountOpen3,
+            transferFrom: "savings",
+            transactionType: "transfer"
+        });
+    }
+
+    toggleTransferChecking(){
+        this.setState({
+            isTransactionAccountOpen3: !this.state.isTransactionAccountOpen3,
+            transferFrom: "checking",
+            transactionType: "transfer"
+        });
+    }
+
+    toggleTransferReg(){
+        this.setState({
+            isTransactionAccountOpen3: !this.state.isTransactionAccountOpen3,
+            transferFrom: "reg",
+            transactionType: "transfer"
+        });
+    }
+
+    toggleTransferRoll(){
+        this.setState({
+            isTransactionAccountOpen3: !this.state.isTransactionAccountOpen3,
+            transferFrom: "roll",
+            transactionType: "transfer"
+        });
+    }
+
+    toggleTransferRoth(){
+        this.setState({
+            isTransactionAccountOpen3: !this.state.isTransactionAccountOpen3,
+            transferFrom: "roth",
+            transactionType: "transfer"
+        });
+    }
+
+    toggleTransferDB(){
+        this.setState({
+            isTransactionAccountOpen4: !this.state.isTransactionAccountOpen4,
+            transferFrom: "db",
+            transactionType: "transfer"
         });
     }
 
@@ -363,13 +550,87 @@ class Dashboard extends Component {
         
     }
 
+    handleWithdraw(values) {
+        withdraw(values)
+        .then(response => {
+            this.props.updateHolder(response);
+        });
+    }
+
+    handleTransfer(values) {
+        transfer(values)
+        .then(response => {
+            this.props.updateHolder(response);
+        });
+    }
+
     handleDepositFilter(values){
+        var obj = ""
+        var endToggler = false;
         if(this.state.accountToDeposit == "savings"){
-            var obj = '{"type": "deposit","amount":' + values.amount + ',"to":' + this.props.holder.savings.accountNumber + '}';
-            var fObj = JSON.parse(obj);
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"to":' + this.props.holder.savings.accountNumber + '}';
+        }
+        if(this.state.accountToDeposit == "checking"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"to":' + this.props.holder.checking.accountNumber + '}';
+        }
+        if(this.state.accountToDeposit == "reg"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"to":' + this.props.holder.regularIRA.accountNumber + '}';
+        }
+        if(this.state.accountToDeposit == "roll"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"to":' + this.props.holder.rolloverIRA.accountNumber + '}';
+        }
+        if(this.state.accountToDeposit == "roth"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"to":' + this.props.holder.rothIRA.accountNumber + '}';
+        }
+        if(this.state.accountToDeposit == 'db'){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"to":' + values.accountNumber + '}';
+            endToggler = true;
+        }
+        var fObj = JSON.parse(obj);
+        if(this.state.transactionType == 'deposit'){
             this.handleDeposit(fObj);
         }
-        this.toggleDeposit();
+        if(this.state.transactionType == 'withdraw'){
+            this.handleWithdraw(fObj);
+        }
+        if(endToggler == true) {
+            this.toggleTransaction2();
+        } else {
+            this.toggleTransaction();
+        }
+        
+    }
+
+    handleTransferFilter(values){
+        var obj = "";
+        var endToggler = false;
+        console.log(values);
+        if(this.state.transferFrom == "savings"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"from":' + this.props.holder.savings.accountNumber + ',"to":' + values.to + '}';
+        }
+        if(this.state.transferFrom == "checking"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"from":' + this.props.holder.checking.accountNumber + ',"to":' + values.to + '}';
+        }
+        if(this.state.transferFrom == "reg"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"from":' + this.props.holder.regularIRA.accountNumber + ',"to":' + values.to + '}';
+        }
+        if(this.state.transferFrom == "roll"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"from":' + this.props.holder.rolloverIRA.accountNumber + ',"to":' + values.to + '}';
+        }
+        if(this.state.transferFrom == "roth"){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"from":' + this.props.holder.rothIRA.accountNumber + ',"to":' + values.to + '}';
+        }
+        if(this.state.transferFrom == 'db'){
+            var obj = '{"type":' + '"' + this.state.transactionType + '"' + ',"amount":' + values.amount + ',"from":' + values.accountNumber + ',"to":' + values.to + '}';
+            endToggler = true;
+        }
+        var fObj = JSON.parse(obj);
+        this.handleTransfer(fObj);
+        if(endToggler == true) {
+            this.toggleTransaction4();
+        } else {
+            this.toggleTransaction3();
+        }
     }
 
     /* Aside Buttons ************************************ */
@@ -553,6 +814,16 @@ class Dashboard extends Component {
         }
     }
 
+    renderSavingsTransactions(){
+        const trans = this.props.holder.savings.transactions.map((transaction) => {
+            return(
+            <li>-{transaction.type} (amount: {transaction.amount}, from: {transaction.source}, recipient : {transaction.target}, on: {transaction.date}</li>
+            );
+        })
+
+        return trans;
+    }
+
     renderSavingsList() {
         const {savingsShow} = this.state;
         if(this.props.holder == null){
@@ -571,7 +842,11 @@ class Dashboard extends Component {
                     <div id="savingsContent" className={`panel ${savingsShow ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Savings Account</p>
-                            <Button onClick={this.toggleDepositSavings}>Delete</Button>
+                            <div className="end-buttons">
+                                <Button onClick={this.toggleDepositSavings}>Deposit</Button>
+                                <Button onClick={this.toggleWithdrawSavings}>Withdraw</Button>
+                                <Button onClick={this.toggleTransferSavings}>Transfer</Button>
+                            </div>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
@@ -582,14 +857,27 @@ class Dashboard extends Component {
                                     <li>Creation Date: {this.props.holder.savings.accoutStartDate}</li>
                                 </ul>
                             </div>
-                            <div className="inner-content">
-
+                            <div className="inner-content-2">
+                                <ul>
+                                    <li>Transactions</li>
+                                    {this.renderSavingsTransactions()}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 );
             }
         }
+    }
+
+    renderCheckingTransactions(){
+        const trans = this.props.holder.checking.transactions.map((transaction) => {
+            return(
+            <li>-{transaction.type} (amount: {transaction.amount}, from: {transaction.source}, recipient : {transaction.target}, on: {transaction.date}</li>
+            );
+        })
+
+        return trans;
     }
 
     renderCheckingList() {
@@ -604,7 +892,13 @@ class Dashboard extends Component {
                     <div className={`panel ${checkingShow ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Checking Account</p>
-                            <Button onClick={this.toggleDeleteAccount}>Delete</Button>
+                            <div className="end-buttons">
+                                <Button onClick={this.toggleDepositChecking}>Deposit</Button>
+                                <Button onClick={this.toggleWithdrawChecking}>Withdraw</Button>
+                                <Button onClick={this.toggleTransferChecking}>Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount}>Delete</Button>
+                            </div>
+                            
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
@@ -615,14 +909,27 @@ class Dashboard extends Component {
                                     <li>Creation Date: {this.props.holder.checking.accoutStartDate}</li>
                                 </ul>
                             </div>
-                            <div className="inner-content">
-
+                            <div className="inner-content-2">
+                                <ul>
+                                    <li>Transactions</li>
+                                    {this.renderCheckingTransactions()}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 );
             }
         }
+    }
+
+    renderRegTransactions(){
+        const trans = this.props.holder.regularIRA.transactions.map((transaction) => {
+            return(
+            <li>-{transaction.type} (amount: {transaction.amount}, from: {transaction.source}, recipient : {transaction.target}, on: {transaction.date}</li>
+            );
+        })
+
+        return trans;
     }
 
     renderRegList() {
@@ -637,7 +944,12 @@ class Dashboard extends Component {
                     <div className={`panel ${regIRAShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Standard IRA Account</p>
-                            <Button onClick={this.toggleDeleteAccount2}>Delete</Button>
+                            <div className="end-buttons">
+                                <Button onClick={this.toggleDepositReg}>Deposit</Button>
+                                <Button onClick={this.toggleWithdrawReg}>Withdraw</Button>
+                                <Button onClick={this.toggleTransferReg}>Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount2}>Delete</Button>
+                            </div>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
@@ -648,14 +960,27 @@ class Dashboard extends Component {
                                     <li>Creation Date: {this.props.holder.regularIRA.accoutStartDate}</li>
                                 </ul>
                             </div>
-                            <div className="inner-content">
-
+                            <div className="inner-content-2">
+                                <ul>
+                                    <li>Transactions</li>
+                                    {this.renderRegTransactions()}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 );
             }
         }
+    }
+
+    renderRollTransactions(){
+        const trans = this.props.holder.rolloverIRA.transactions.map((transaction) => {
+            return(
+            <li>-{transaction.type} (amount: {transaction.amount}, from: {transaction.source}, recipient : {transaction.target}, on: {transaction.date}</li>
+            );
+        })
+
+        return trans;
     }
 
     renderRollList() {
@@ -670,7 +995,12 @@ class Dashboard extends Component {
                     <div className={`panel ${rollIRAShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Rollover IRA Account</p>
-                            <Button onClick={this.toggleDeleteAccount4}>Delete</Button>
+                            <div className="end-buttons">
+                                <Button onClick={this.toggleDepositRoll}>Deposit</Button>
+                                <Button onClick={this.toggleWithdrawRoll}>Withdraw</Button>
+                                <Button onClick={this.toggleTransferRoll}>Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount4}>Delete</Button>
+                            </div>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
@@ -681,14 +1011,27 @@ class Dashboard extends Component {
                                     <li>Creation Date: {this.props.holder.rolloverIRA.accoutStartDate}</li>
                                 </ul>
                             </div>
-                            <div className="inner-content">
-
+                            <div className="inner-content-2">
+                                <ul>
+                                    <li>Transactions</li>
+                                    {this.renderRollTransactions()}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 );
             }
         }
+    }
+
+    renderRothTransactions(){
+        const trans = this.props.holder.rothIRA.transactions.map((transaction) => {
+            return(
+            <li>-{transaction.type} (amount: {transaction.amount}, from: {transaction.source}, recipient : {transaction.target}, on: {transaction.date}</li>
+            );
+        })
+
+        return trans;
     }
 
     renderRothList() {
@@ -703,7 +1046,12 @@ class Dashboard extends Component {
                     <div className={`panel ${rothIRAShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Roth IRA Account</p>
-                            <Button onClick={this.toggleDeleteAccount3}>Delete</Button>
+                            <div className="end-buttons">
+                                <Button onClick={this.toggleDepositRoth}>Deposit</Button>
+                                <Button onClick={this.toggleWithdrawRoth}>Withdraw</Button>
+                                <Button onClick={this.toggleTransferRoth}>Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount3}>Delete</Button>
+                            </div>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
@@ -714,8 +1062,11 @@ class Dashboard extends Component {
                                     <li>Creation Date: {this.props.holder.rothIRA.accoutStartDate}</li>
                                 </ul>
                             </div>
-                            <div className="inner-content">
-
+                            <div className="inner-content-2">
+                                <ul>
+                                    <li>Transactions</li>
+                                    {this.renderRothTransactions()}
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -767,16 +1118,16 @@ class Dashboard extends Component {
                     <div className={`panel ${cdShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">CD Accounts</p>
-                            <Button onClick={this.toggleCDDelete}>Delete</Button>
+                            <div className="end-buttons">
+                                <Button onClick={this.toggleCDDelete}>Delete</Button>
+                            </div>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
                                 {this.renderCDListItems()}
                                 <Button className="dash-btn" onClick={this.toggleCDAccount}>Add CD Account</Button>
                             </div>
-                            <div className="inner-content">
-
-                            </div>
+                            
                         </div>
                     </div>
                 );
@@ -800,6 +1151,30 @@ class Dashboard extends Component {
         return dbList;
     }
 
+    renderDBTransaction(value){
+        if(value.transactions.length > 0){
+            const transList = value.transactions.map((trans) =>{
+                return (
+                    <li>-{trans.type} (amount: {trans.amount}, from: {trans.source}, recipient : {trans.target}, on: {trans.date}</li>
+                );
+            })
+            return transList;
+        }
+    }
+
+    renderDBTransactions(){
+        const dbList = this.props.holder.dbAccount.map((account) => {
+            return(
+                <ul>
+                    <li>Transactions Account ({account.accountNumber})</li>
+                    {this.renderDBTransaction(account)}
+                </ul>
+            );
+        })
+
+        return dbList;
+    }
+
     renderDBList() {
         const {dbShowing} = this.state;
         if(this.props.holder == null){
@@ -812,15 +1187,20 @@ class Dashboard extends Component {
                     <div className={`panel ${dbShowing ? 'showing' : ''}`}>
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">DB Accounts</p>
-                            <Button onClick={this.toggleDBDelete}>Delete</Button>
+                            <div className="end-buttons">
+                                <Button onClick={this.toggleDepositDB}>Deposit</Button>
+                                <Button onClick={this.toggleWithdrawDB}>Withdraw</Button>
+                                <Button onClick={this.toggleTransferDB}>Transfer</Button>
+                                <Button onClick={this.toggleDBDelete}>Delete</Button>
+                            </div>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
                                 {this.renderDBListItems()}
                                 <Button className="dash-btn" onClick={this.toggleDBAccount}>Add DB Account</Button>
                             </div>
-                            <div className="inner-content">
-
+                            <div className="inner-content-2">
+                                {this.renderDBTransactions()}
                             </div>
                         </div>
                     </div>
@@ -835,7 +1215,7 @@ class Dashboard extends Component {
         }
         const cdList = this.props.holder.cdAccount.map((cdaccount) => {
             return(
-                <option>{cdaccount.accountNumber}</option>
+                <option value={cdaccount.accountNumber}>CD Account ({cdaccount.accountNumber})</option>
             );
         })
 
@@ -848,12 +1228,89 @@ class Dashboard extends Component {
         }
         const dbList = this.props.holder.dbAccount.map((dbaccount) => {
             return(
-                <option>{dbaccount.accountNumber}</option>
+                <option value={dbaccount.accountNumber}>DB Account ({dbaccount.accountNumber})</option>
             );
         })
 
         return dbList;
     }
+
+    renderAllAccounts() {
+        if(this.props.holder == null) {
+            return <option>1</option>
+        }
+        var totalsCon = [];
+        if(this.props.holder.savings !== null ){
+            var ticker1 = true;
+            if(this.state.transferFrom == "savings"){
+                ticker1 = false;
+            }
+            totalsCon.push(<option value={this.props.holder.savings.accountNumber} className={`panel ${ticker1 ? 'showing' : ''}`}>Savings Account ({this.props.holder.savings.accountNumber})</option>);
+        }
+        if(this.props.holder.checking !== null ){
+            var ticker2 = true;
+            if(this.state.transferFrom == "checking"){
+                ticker2 = false;
+            }
+            totalsCon.push(<option value={this.props.holder.checking.accountNumber} className={`panel ${ticker2 ? 'showing' : ''}`}>Checking Account ({this.props.holder.checking.accountNumber})</option>);
+        }
+        if(this.props.holder.regularIRA !== null){
+            var ticker3 = true;
+            if(this.state.transferFrom == "reg"){
+                ticker3 = false;
+            }
+            totalsCon.push(<option value={this.props.holder.regularIRA.accountNumber} className={`panel ${ticker3 ? 'showing' : ''}`}>Standard IRA Account ({this.props.holder.regularIRA.accountNumber})</option>);
+        }
+        if(this.props.holder.rolloverIRA !== null){
+            var ticker4 = true;
+            if(this.state.transferFrom == "roll"){
+                ticker4 = false;
+            }
+            totalsCon.push(<option value={this.props.holder.rolloverIRA.accountNumber} className={`panel ${ticker4 ? 'showing' : ''}`}>Rollover IRA Account ({this.props.holder.rolloverIRA.accountNumber})</option>);
+        }
+        if(this.props.holder.rothIRA !== null){
+            var ticker5 = true;
+            if(this.state.transferFrom == "roth"){
+                ticker5 = false;
+            }
+            totalsCon.push(<option value={this.props.holder.rothIRA.accountNumber} className={`panel ${ticker5 ? 'showing' : ''}`}>Roth IRA Account ({this.props.holder.rothIRA.accountNumber})</option>);
+        }
+        if(this.props.holder.dbAccount.length > 0){
+            var dbNumbers = this.props.holder.dbAccount.map(x => x.accountNumber);
+            for(var x = 0; x < dbNumbers.length; x++){
+                totalsCon.push(<option value={dbNumbers[x]}>DB Account ({dbNumbers[x]})</option>);
+            }
+        }
+
+        return totalsCon;
+    }
+
+    /*
+
+    renderDBorABOptions() {
+        if(this.props.holder == null) {
+            return <option>1</option>
+        } else {
+            var totalsCon = [];
+            if(this.props.holder.cdAccount.length > 0){
+                var cdNumbers = this.props.holder.cdAccount.map(x => x.accountNumber);
+                for(var x = 0; x < cdNumbers.length; x++){
+                    totalsCon.push(<option className={`panel ${cdTransactionShowing ? 'showing' : ''}`}>{cdNumbers[x]}</option>);
+                }
+            }
+            if(this.props.holder.dbAccount.length > 0){
+                var dbNumbers = this.props.holder.dbAccount.map(x => x.accountNumber);
+                for(var x = 0; x < dbNumbers.length; x++){
+                    totalsCon.push(<option className={`panel ${dbTransactionShowing ? 'showing' : ''}`}>{dbNumbers[x]}</option>)
+                }
+            }
+            console.log(cdNumbers);
+            console.log(totalsCon);
+            return totalsCon;
+        }
+    }
+
+    */
 
     /* Final Render **************************************** */
 
@@ -870,7 +1327,7 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="container py-3">
-                    <Button>New Transaction</Button>
+                    <Button>Client Details</Button>
                 </div>
                 <div className="container client-dash">
                     <div className="side mr-2 p-4">
@@ -1350,10 +1807,141 @@ class Dashboard extends Component {
                     </ModalBody>
                 </Modal>
 
-                <Modal isOpen={this.state.isDepositAccountOpen} toggle={this.toggleDeposit}>
-                    <ModalHeader>Deposit</ModalHeader>
+                <Modal isOpen={this.state.isTransactionAccountOpen} toggle={this.toggleTransaction}>
+                    <ModalHeader>Transaction</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleDepositFilter(values)}>
+                            <Row className="form-group">
+                               <Label htmlFor="amount" md={2}>Amount</Label>
+                                <Control.text model=".amount" type="text" id="amount" name="amount"
+                                    placeholder="20" 
+                                    className="form-control mx-3" 
+                                    validators={{
+                                        required
+                                    }}
+                                        />
+                                <Errors 
+                                    className="text-danger mx-3"
+                                    model=".amount"
+                                    show="touched"
+                                     messages={{
+                                        required: 'Required',
+                                    }}
+                                />
+                            </Row>
+                            <Row className="form-group">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
+                                        Submit
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.isTransactionAccountOpen3} toggle={this.toggleTransaction3}>
+                    <ModalHeader>Transaction</ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => this.handleTransferFilter(values)}>
+                            <Row className="form-group">
+                                <Label htmlFor="to" md={2}>Transfer To:</Label>
+                                <Control.select model=".to" name="to" 
+                                    className="form-control mx-3" >
+                                    <option>Choose Account</option>
+                                    {this.renderAllAccounts()}
+                                </Control.select>
+                            </Row>
+                            <Row className="form-group">
+                               <Label htmlFor="amount" md={2}>Amount</Label>
+                                <Control.text model=".amount" type="text" id="amount" name="amount"
+                                    placeholder="20" 
+                                    className="form-control mx-3" 
+                                    validators={{
+                                        required
+                                    }}
+                                        />
+                                <Errors 
+                                    className="text-danger mx-3"
+                                    model=".amount"
+                                    show="touched"
+                                     messages={{
+                                        required: 'Required',
+                                    }}
+                                />
+                            </Row>
+                            <Row className="form-group">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
+                                        Submit
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.isTransactionAccountOpen2} toggle={this.toggleTransaction2}>
+                    <ModalHeader>Transaction</ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => this.handleDepositFilter(values)}>
+                            <Row className="form-group">
+                                <Label htmlFor="accountNumber" md={2}>Account Number</Label>
+                                <Control.select model=".accountNumber" name="accountNumber" 
+                                    className="form-control mx-3" >
+                                    <option>Choose Id</option>
+                                    {this.renderDBAccountOptions()}
+                                </Control.select>
+                            </Row>
+                            <Row className="form-group">
+                               <Label htmlFor="amount" md={2}>Amount</Label>
+                                <Control.text model=".amount" type="text" id="amount" name="amount"
+                                    placeholder="20" 
+                                    className="form-control mx-3" 
+                                    validators={{
+                                        required
+                                    }}
+                                        />
+                                <Errors 
+                                    className="text-danger mx-3"
+                                    model=".amount"
+                                    show="touched"
+                                     messages={{
+                                        required: 'Required',
+                                    }}
+                                />
+                            </Row>
+                            <Row className="form-group">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
+                                        Submit
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.isTransactionAccountOpen4} toggle={this.toggleTransaction4}>
+                    <ModalHeader>Transaction</ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => this.handleTransferFilter(values)}>
+                            <Row className="form-group">
+                                <Label htmlFor="accountNumber" md={2}>Account Number</Label>
+                                <Control.select model=".accountNumber" name="accountNumber" 
+                                    className="form-control mx-3" >
+                                    <option>Choose Id</option>
+                                    {this.renderDBAccountOptions()}
+                                </Control.select>
+                            </Row>
+                            <Row className="form-group">
+                                <Label htmlFor="to" md={2}>Transfer To:</Label>
+                                <Control.select model=".to" name="to" 
+                                    className="form-control mx-3" >
+                                    <option>Choose Account</option>
+                                    {this.renderAllAccounts()}
+                                </Control.select>
+                            </Row>
                             <Row className="form-group">
                                <Label htmlFor="amount" md={2}>Amount</Label>
                                 <Control.text model=".amount" type="text" id="amount" name="amount"

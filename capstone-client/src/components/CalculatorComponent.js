@@ -61,10 +61,18 @@ class Calculator extends Component {
             var interest = parseFloat(interestT[x]);
             var term = parseInt(termsT[x]);
             var newRound = parseFloat(this.state.startValue);
-            totalsCon.push(<td className="pt-2">{this.recursiveFutureValue(newRound, term, interest)}</td>);
+            totalsCon.push(this.recursiveFutureValue(newRound, term, interest));
         }
-        console.log(totalsCon);
-        return totalsCon;
+        var totalsCon2 = [...totalsCon];
+        totalsCon2.sort((a,b) => b - a);
+        for(var x = 0; x < totalsCon.length; x++){
+            if(totalsCon2[0] == totalsCon[x] && this.state.startValue !== 0){
+                totals3.push(<td className="pt-2 green">{totalsCon[x]}</td>);
+            } else {
+                totals3.push(<td className="pt-2">{totalsCon[x]}</td>);
+            }
+        }
+        return totals3;
     }
 
     toggleStart() {
@@ -115,7 +123,7 @@ class Calculator extends Component {
                 </div>
                 <div className="container py-5 text-center">
                     <p className="secondary-header-text">CD Plans</p>
-                    <p>Use our convienent CD calculator to determine which plans work best for your money.</p>
+                    <p>Use our CD calculator to determine which plan works best for your money. Highlighted <span className="green-text">Green</span> is best value</p>
                     <table className="tableCD">
                         <thead className="tableHeadCD">
                             <tr><td className="tableLabels">Our CD Plans</td>{this.renderPlans()}</tr>

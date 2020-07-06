@@ -232,5 +232,27 @@ const request = (options) => {
         });
     }
 
+    export function withdraw(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Withdraw/" + values.type + "/" + values.to + "/" + values.amount,
+            method: 'POST',
+        });
+    }
+
+    export function transfer(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Transfer/" + values.type + "/" + values.from + "/" + values.to + "/" + values.amount,
+            method: 'POST',
+        });
+    }
+
 
 

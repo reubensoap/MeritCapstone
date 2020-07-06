@@ -64,7 +64,7 @@ class Login extends Component {
                     <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                         <div className="container p-5 update-form text-center">
                             <h2>Merit Bank</h2>
-                            <h3>Welcome Back</h3>
+                            <h3>Login</h3>
                             <p>Banking made easy</p>
                             <Row className="form-group">
                                 <Control.text model=".username" id="username" name="username"

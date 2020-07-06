@@ -4,6 +4,16 @@ body {
   font-family: sans-serif;
 }
 
+.green {
+  background-color: rgb(62, 163, 62);
+  color: white;
+  box-shadow: 1px 1px 10px 4px rgb(150, 221, 165);
+}
+
+.green-text {
+  color: rgb(62, 163, 62);
+}
+
 p {
   font-size: 16px;
 }
@@ -235,7 +245,7 @@ p {
   padding-right: 10px;
 }
 
-.inner-content .inner-side ul {
+.inner-content .inner-side ul, .inner-content-2 ul {
   list-style-type: none;
   padding-left: 0;
   width: 100%;
@@ -246,12 +256,12 @@ p {
   margin-bottom: 10px;
 }
 
-.inner-content .inner-side ul li {
+.inner-content .inner-side ul li, .inner-content-2 ul li {
   color: #777;
   padding-left: 10px;
 }
 
-.inner-content .inner-side ul li:nth-child(1) {
+.inner-content .inner-side ul li:nth-child(1), .inner-content-2 ul li:nth-child(1) {
   background-color: rgba(0, 0, 0, 0.199);
   padding-bottom: 5px;
   padding-top: 5px;
@@ -266,8 +276,25 @@ p {
   padding-bottom: 3px;
 }
 
-.inner-content .inner-content {
+.inner-content-2 {
   flex: 2;
+  padding-left: 10px;
+}
+
+.inner-content-2 ul li:nth-child(1) {
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.199);
+  font-size: 1rem;
+}
+
+.inner-content-2 ul li {
+  font-size: 0.9rem;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.inner-content-2 ul li:nth-child(2n + 2) {
+  background-color: rgb(211, 211, 211);
 }
 
 .panel {

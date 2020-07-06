@@ -58,7 +58,7 @@ class Register extends Component {
                     <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                         <div className="container p-5 update-form text-center">
                             <h2>Merit Bank</h2>
-                            <h3>Hello there!</h3>
+                            <h3>Get Started</h3>
                             <p>You're on your way to better banking.</p>
                             <Row className="form-group">
                                 <Control.text model=".userName" id="userName" name="userName"

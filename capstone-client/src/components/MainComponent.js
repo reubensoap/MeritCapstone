@@ -60,7 +60,7 @@ class Main extends Component {
   
       const HomePage = () => {
         return(
-          <Home onLogout={this.handleLogout}/>
+          <Home authen={this.props.isAuthenticated}/>
         );
       }
 
