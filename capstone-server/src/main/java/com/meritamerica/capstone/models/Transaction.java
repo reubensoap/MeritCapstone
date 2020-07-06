@@ -28,6 +28,7 @@ public abstract class Transaction {
 	Transaction(){
 		
 	}
+	
 	Transaction(int target, double amount, String type){
 		this.target = target;
 		this.amount = amount;

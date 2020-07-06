@@ -203,24 +203,36 @@ public class AccountHolder{
 	}
 
 	public BankAccount findAccount(int id) throws InformationNotfound {
-		if(checking.getAccountNumber() == id) {
-			return checking;
+		if(checking != null) {
+			if(checking.getAccountNumber() == id) {
+				return checking;
+			}
 		}
-		if(savings.getAccountNumber() == id) {
-			return savings;
+		if(savings != null) {
+			if(savings.getAccountNumber() == id) {
+				return savings;
+			}
 		}
-		if(regularIRA.getAccountNumber() == id) {
-			return regularIRA;
+		if(regularIRA != null) {
+			if(regularIRA.getAccountNumber() == id) {
+				return regularIRA;
+			}
 		}
-		if(rolloverIRA.getAccountNumber() == id) {
-			return rolloverIRA;
+		if(rolloverIRA != null) {
+			if(rolloverIRA.getAccountNumber() == id) {
+				return rolloverIRA;
+			}
 		}
-		if(rothIRA.getAccountNumber() == id) {
-			return rothIRA;
+		if(rothIRA != null) {
+			if(rothIRA.getAccountNumber() == id) {
+				return rothIRA;
+			}
 		}
-		for(int i = 0; i < dbAccounts.size(); i++) {
-			if(dbAccounts.get(i).getAccountNumber() == id) {
-				return dbAccounts.get(i);
+		if(dbAccounts.size() > 0) {
+			for(int i = 0; i < dbAccounts.size(); i++) {
+				if(dbAccounts.get(i).getAccountNumber() == id) {
+					return dbAccounts.get(i);
+				}
 			}
 		}
 		throw new InformationNotfound("Account not found.");

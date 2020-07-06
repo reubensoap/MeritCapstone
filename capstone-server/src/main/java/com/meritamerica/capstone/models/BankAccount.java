@@ -19,6 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.meritamerica.capstone.exception.ExceedsAvailableBalanceException;
+import com.meritamerica.capstone.exception.NegativeAmountException;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -85,21 +87,31 @@ public abstract class BankAccount {
 	}
 	
 
-	public boolean withdraw(double amount) {
-		if(amount > 0 && amount < balance) {
-			balance -= amount;
-			return true;
+	public boolean withdraw(double amount) throws NegativeAmountException, ExceedsAvailableBalanceException {
+		if(amount > 0) {
+			if(amount < balance) {
+				balance -= amount;
+				return true;
+			}
+			else{
+				throw new ExceedsAvailableBalanceException();
+			}
+			
 		}
-		return false;
+		else {
+			throw new NegativeAmountException();
+		}
 	}
 
-	public boolean deposit (double amount) {
+	public boolean deposit (double amount) throws NegativeAmountException {
 		
 		if(amount > 0) {
 			balance += amount;
 			return true;
 		}
-		return false;
+		else {
+			throw new NegativeAmountException();
+		}
 	}
 
 

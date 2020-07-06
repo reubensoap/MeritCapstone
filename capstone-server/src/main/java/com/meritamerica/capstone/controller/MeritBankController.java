@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.meritamerica.capstone.exception.AccountExistsException;
+import com.meritamerica.capstone.exception.ExceedsAvailableBalanceException;
 import com.meritamerica.capstone.exception.ExceedsCombinedLimitException;
 import com.meritamerica.capstone.exception.InformationNotfound;
 import com.meritamerica.capstone.exception.NegativeAmountException;
@@ -157,6 +158,9 @@ public class MeritBankController {
 	public CheckingAccount createCheckingAccount(Principal token, @RequestBody CheckingAccount checking) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
+		if(account.getChecking() != null) {
+			throw new AccountExistsException();
+		}
 		account.setChecking(checking);
 		aRepository.save(account);
 		return checking;
@@ -167,6 +171,9 @@ public class MeritBankController {
 	public SavingsAccount createSavingsAccount(Principal token, @RequestBody SavingsAccount savings) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = user.getAccount();
+		if(account.getSavings() != null) {
+			throw new AccountExistsException();
+		}
 		account.setSavings(savings);
 		aRepository.save(account);
 		return savings;
@@ -177,6 +184,9 @@ public class MeritBankController {
 	public DBAccount createDBAccount(Principal token, @RequestBody DBAccount dbAccount) throws AccountExistsException, ExceedsCombinedLimitException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = user.getAccount();
+		if(account.getDbAccount().size() == 3) {
+			throw new AccountExistsException();
+		}
 		account.addDBAccount(dbAccount);
 		aRepository.save(account);
 		return dbAccount;
@@ -197,6 +207,9 @@ public class MeritBankController {
 	public RolloverIRA createRolloverIRA(Principal token, @RequestBody RolloverIRA ira) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = user.getAccount();
+		if(account.getRolloverIRA() != null) {
+			throw new AccountExistsException();
+		}
 		account.setRolloverIRA(ira);
 		aRepository.save(account);
 		return ira;
@@ -207,6 +220,9 @@ public class MeritBankController {
 	public RothIRA createRothIRA(Principal token, @RequestBody RothIRA ira) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = user.getAccount();
+		if(account.getRothIRA() != null) {
+			throw new AccountExistsException();
+		}
 		account.setRothIRA(ira);
 		aRepository.save(account);
 		return ira;
@@ -217,6 +233,9 @@ public class MeritBankController {
 	public RegularIRA createRegularIRA(Principal token, @RequestBody RegularIRA ira) throws AccountExistsException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = user.getAccount();
+		if(account.getRegularIRA() != null) {
+			throw new AccountExistsException();
+		}
 		account.setRegularIRA(ira);
 		aRepository.save(account);
 		return ira;
@@ -224,7 +243,7 @@ public class MeritBankController {
 
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Delete/CheckingAccount")
-	public AccountHolder deleteCheckingAccount(Principal token) throws AccountExistsException{
+	public AccountHolder deleteCheckingAccount(Principal token) throws AccountExistsException, NegativeAmountException{
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		int id = account.getChecking().getAccountNumber();
@@ -243,7 +262,7 @@ public class MeritBankController {
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Delete/DBAccount/{id}")
-	public AccountHolder deleteDBAccount(Principal token, @PathVariable("id") int id) throws AccountExistsException, ExceedsCombinedLimitException {
+	public AccountHolder deleteDBAccount(Principal token, @PathVariable("id") int id) throws AccountExistsException, ExceedsCombinedLimitException, NegativeAmountException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		DBAccount dba = DBARepository.findOne(id);
@@ -263,7 +282,7 @@ public class MeritBankController {
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Delete/CDAccount/{id}")
-	public AccountHolder deleteCDAccount(Principal token, @PathVariable("id") int id) throws AccountExistsException {
+	public AccountHolder deleteCDAccount(Principal token, @PathVariable("id") int id) throws AccountExistsException, NegativeAmountException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		CDAccount cda = CDARepository.findOne(id);
@@ -283,7 +302,7 @@ public class MeritBankController {
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Delete/RolloverIRA")
-	public AccountHolder deleteRolloverIRA(Principal token) throws AccountExistsException {
+	public AccountHolder deleteRolloverIRA(Principal token) throws AccountExistsException, NegativeAmountException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		RolloverIRA rollover = rolloverRepository.findOne(account.getRolloverIRA().getAccountNumber());
@@ -303,7 +322,7 @@ public class MeritBankController {
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Delete/RothIRA")
-	public AccountHolder deleteRothIRA(Principal token) throws AccountExistsException {
+	public AccountHolder deleteRothIRA(Principal token) throws AccountExistsException, NegativeAmountException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		RothIRA roth = rothRepository.findOne(account.getRothIRA().getAccountNumber());
@@ -323,7 +342,7 @@ public class MeritBankController {
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Delete/RegularIRA")
-	public AccountHolder deleteRegularIRA(Principal token) throws AccountExistsException {
+	public AccountHolder deleteRegularIRA(Principal token) throws AccountExistsException, NegativeAmountException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		RegularIRA regular = regularRepository.findOne(account.getRegularIRA().getAccountNumber());
@@ -352,23 +371,24 @@ public class MeritBankController {
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Transfer/{type}/{from}/{to}/{amount}")
 	public void transfer(Principal token, @PathVariable("type") String type, @PathVariable("from") int source,
-			@PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound {
+			@PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException, ExceedsAvailableBalanceException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		Transfer trans = new Transfer(source, target, amount, type);
+		Transfer trans2 = new Transfer(source, target,0-amount, type);
 		account.findAccount(source).withdraw(amount);
 		account.findAccount(target).deposit(amount);
-		account.findAccount(source).addTransaction(trans);
+		account.findAccount(source).addTransaction(trans2);
 		account.findAccount(target).addTransaction(trans);
 		aRepository.save(account);
 	}
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Withdraw/{type}/{to}/{amount}")
-	public void withdraw(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound {
+	public void withdraw(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException, ExceedsAvailableBalanceException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
-		Withdraw trans = new Withdraw(target, amount, type);
+		Withdraw trans = new Withdraw(target,0-amount, type);
 		account.findAccount(target).withdraw(amount);
 		account.findAccount(target).addTransaction(trans);
 		aRepository.save(account);
@@ -376,7 +396,7 @@ public class MeritBankController {
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Deposit/{type}/{to}/{amount}")
-	public void deposit(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound {
+	public void deposit(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		Deposit trans = new Deposit(target, amount, type);
