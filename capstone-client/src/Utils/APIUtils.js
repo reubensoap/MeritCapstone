@@ -221,5 +221,16 @@ const request = (options) => {
         });
     }
 
+    export function deposit(values) {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Deposit/" + values.type + "/" + values.to + "/" + values.amount,
+            method: 'POST',
+        });
+    }
+
 
 

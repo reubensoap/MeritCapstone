@@ -370,7 +370,7 @@ public class MeritBankController {
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Transfer/{type}/{from}/{to}/{amount}")
-	public void transfer(Principal token, @PathVariable("type") String type, @PathVariable("from") int source,
+	public AccountHolder transfer(Principal token, @PathVariable("type") String type, @PathVariable("from") int source,
 			@PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException, ExceedsAvailableBalanceException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
@@ -381,27 +381,36 @@ public class MeritBankController {
 		account.findAccount(source).addTransaction(trans2);
 		account.findAccount(target).addTransaction(trans);
 		aRepository.save(account);
+		/* Reuben Code */
+		return account;
+		/* End reuben code */
 	}
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Withdraw/{type}/{to}/{amount}")
-	public void withdraw(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException, ExceedsAvailableBalanceException {
+	public AccountHolder withdraw(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException, ExceedsAvailableBalanceException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		Withdraw trans = new Withdraw(target,0-amount, type);
 		account.findAccount(target).withdraw(amount);
 		account.findAccount(target).addTransaction(trans);
 		aRepository.save(account);
+		/* Reuben Code */
+		return account;
+		/* End reuben code */
 	}
 	
 	@PreAuthorize("hasAuthority('accountholder')")
 	@PostMapping(value = "/Deposit/{type}/{to}/{amount}")
-	public void deposit(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException {
+	public AccountHolder deposit(Principal token, @PathVariable("type") String type, @PathVariable("to") int target, @PathVariable("amount") double amount) throws InformationNotfound, NegativeAmountException {
 		User user = userRepository.findByUserName(token.getName()).get();
 		AccountHolder account = aRepository.findOne(user.getAccount().getId());
 		Deposit trans = new Deposit(target, amount, type);
 		account.findAccount(target).deposit(amount);
 		account.findAccount(target).addTransaction(trans);
 		aRepository.save(account);
+		/* Reuben Code */
+		return account;
+		/* End reuben code */
 	}
 }

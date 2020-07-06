@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { Row, Label, Col, Button, Card ,CardBody, Collapse, CardHeader, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import { createSavingsAccount, createCheckingAccount, createCDAccount, createDBAccount, createRegIRA, createRollIRA, createRothIRA
-    , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth } from '../Utils/APIUtils';
+    , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth, deposit } from '../Utils/APIUtils';
 import { OFFERS } from '../Utils/testCDOfferings';
 import { LocalForm, Control, Errors } from 'react-redux-form';
 import { Link, Redirect } from 'react-router-dom';
@@ -19,6 +19,7 @@ class Dashboard extends Component {
         this.state = {
             redirect: null,
             accountToDelete: "",
+            accountToDeposit: "",
 
             isCheckingOpen: false,
             isSavingsOpen: false,
@@ -30,6 +31,7 @@ class Dashboard extends Component {
             isRollIRAOpen: false,
             isRothIRAOpen: false,
             isDeleteAccountOpen: false,
+            isDepositAccountOpen: false,
 
             defaultShow: true,
             savingsShow: false,
@@ -58,6 +60,8 @@ class Dashboard extends Component {
         this.toggleDeleteAccount2 = this.toggleDeleteAccount2.bind(this);
         this.toggleDeleteAccount3 = this.toggleDeleteAccount3.bind(this);
         this.toggleDeleteAccount4 = this.toggleDeleteAccount4.bind(this);
+        this.toggleDepositSavings = this.toggleDepositSavings.bind(this);
+        this.toggleDeposit = this.toggleDeposit.bind(this);
 
         this.renderHeader = this.renderHeader.bind(this);
         this.renderSavingsTag = this.renderSavingsTag.bind(this);
@@ -71,6 +75,8 @@ class Dashboard extends Component {
         this.handleDeleteRoth = this.handleDeleteRoth.bind(this);
         this.handleDeleteCD = this.handleDeleteCD.bind(this);
         this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
+        this.handleDeposit = this.handleDeposit.bind(this);
+        this.handleDepositFilter = this.handleDepositFilter.bind(this);
     }
 
     /* Toggle Modals ***************************** */
@@ -154,6 +160,19 @@ class Dashboard extends Component {
         this.setState({
             isDeleteAccountOpen: !this.state.isDeleteAccountOpen,
             accountToDelete: "roll"
+        });
+    }
+
+    toggleDeposit() {
+        this.setState({
+            isDepositAccountOpen: !this.state.isDepositAccountOpen
+        });
+    }
+
+    toggleDepositSavings() {
+        this.setState({
+            isDepositAccountOpen: !this.state.isDepositAccountOpen,
+            accountToDeposit: "savings"
         });
     }
 
@@ -334,6 +353,23 @@ class Dashboard extends Component {
             this.handleDeleteRoll();
         }
         console.log(this.state.accountToDelete);
+    }
+
+    handleDeposit(values) {
+        deposit(values)
+        .then(response => {
+            this.props.updateHolder(response);
+        });
+        
+    }
+
+    handleDepositFilter(values){
+        if(this.state.accountToDeposit == "savings"){
+            var obj = '{"type": "deposit","amount":' + values.amount + ',"to":' + this.props.holder.savings.accountNumber + '}';
+            var fObj = JSON.parse(obj);
+            this.handleDeposit(fObj);
+        }
+        this.toggleDeposit();
     }
 
     /* Aside Buttons ************************************ */
@@ -533,8 +569,9 @@ class Dashboard extends Component {
             } else {
                 return (
                     <div id="savingsContent" className={`panel ${savingsShow ? 'showing' : ''}`}>
-                        <div className="content-header text-white mb-2 savings-header-spacer">
+                        <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Savings Account</p>
+                            <Button onClick={this.toggleDepositSavings}>Delete</Button>
                         </div>
                         <div className="inner-content">
                             <div className="inner-side">
@@ -1309,6 +1346,39 @@ class Dashboard extends Component {
                                 </Button>
                                 <Button onClick={this.toggleDeleteAccount}>No</Button>
                             </div>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.isDepositAccountOpen} toggle={this.toggleDeposit}>
+                    <ModalHeader>Deposit</ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => this.handleDepositFilter(values)}>
+                            <Row className="form-group">
+                               <Label htmlFor="amount" md={2}>Amount</Label>
+                                <Control.text model=".amount" type="text" id="amount" name="amount"
+                                    placeholder="20" 
+                                    className="form-control mx-3" 
+                                    validators={{
+                                        required
+                                    }}
+                                        />
+                                <Errors 
+                                    className="text-danger mx-3"
+                                    model=".amount"
+                                    show="touched"
+                                     messages={{
+                                        required: 'Required',
+                                    }}
+                                />
+                            </Row>
+                            <Row className="form-group">
+                                <Col>
+                                    <Button type="submit" className="dash-btn">
+                                        Submit
+                                    </Button>
+                                </Col>
+                            </Row>
                         </LocalForm>
                     </ModalBody>
                 </Modal>
