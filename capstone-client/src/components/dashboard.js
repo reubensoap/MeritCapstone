@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { Row, Label, Col, Button, Card ,CardBody, Collapse, CardHeader, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import { createSavingsAccount, createCheckingAccount, createCDAccount, createDBAccount, createRegIRA, createRollIRA, createRothIRA
-    , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth, deposit, withdraw, transfer } from '../Utils/APIUtils';
+    , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth, deposit, withdraw, transfer, deleteAccount, ACCESS_TOKEN } from '../Utils/APIUtils';
 import { OFFERS } from '../Utils/testCDOfferings';
 import { LocalForm, Control, Errors } from 'react-redux-form';
 import { Link, Redirect } from 'react-router-dom';
@@ -37,6 +37,8 @@ class Dashboard extends Component {
             isTransactionAccountOpen2: false,
             isTransactionAccountOpen3: false,
             isTransactionAccountOpen4: false,
+            isClientViewOpen: false,
+            isClientSlideOpen: false,
 
             defaultShow: true,
             savingsShow: false,
@@ -53,6 +55,7 @@ class Dashboard extends Component {
         this.getHolderAgain = this.getHolderAgain.bind(this);
 
         this.toggleChecking = this.toggleChecking.bind(this);
+        this.toggleClientDelete = this.toggleClientDelete.bind(this);
         this.toggleSavings = this.toggleSavings.bind(this);
         this.toggleCDAccount = this.toggleCDAccount.bind(this);
         this.toggleCDDelete = this.toggleCDDelete.bind(this);
@@ -107,7 +110,6 @@ class Dashboard extends Component {
     }
 
     /* Toggle Modals ***************************** */
-
 
     toggleChecking() {
         this.setState({
@@ -190,6 +192,13 @@ class Dashboard extends Component {
         this.setState({
             isDeleteAccountOpen: !this.state.isDeleteAccountOpen,
             accountToDelete: "roll"
+        });
+    }
+
+    toggleClientDelete(){
+        this.setState({
+            isClientViewOpen: !this.state.isClientViewOpen,
+            accountToDelete: this.props.holder.id
         });
     }
 
@@ -557,6 +566,13 @@ class Dashboard extends Component {
         console.log(this.state.accountToDelete);
     }
 
+    handleClientDelete(value) {
+        console.log("deleted");
+        this.props.logout(false);
+        deleteAccount(value);
+        localStorage.removeItem(ACCESS_TOKEN);
+    }
+
     handleDeposit(values) {
         deposit(values)
         .then(response => {
@@ -660,7 +676,8 @@ class Dashboard extends Component {
             regIRAShowing: false,
             rollIRAShowing: false,
             rothIRAShowing: false,
-            defaultShow: false
+            defaultShow: false,
+            isClientSlideOpen: false
         });
     }
 
@@ -674,7 +691,8 @@ class Dashboard extends Component {
             regIRAShowing: false,
             rollIRAShowing: false,
             rothIRAShowing: false,
-            defaultShow: false
+            defaultShow: false,
+            isClientSlideOpen: false
         });
     }
 
@@ -688,7 +706,8 @@ class Dashboard extends Component {
             regIRAShowing: false,
             rollIRAShowing: false,
             rothIRAShowing: false,
-            defaultShow: false
+            defaultShow: false,
+            isClientSlideOpen: false
         });
     }
 
@@ -702,7 +721,8 @@ class Dashboard extends Component {
             regIRAShowing: false,
             rollIRAShowing: false,
             rothIRAShowing: false,
-            defaultShow: false
+            defaultShow: false,
+            isClientSlideOpen: false
         });
     }
 
@@ -716,7 +736,8 @@ class Dashboard extends Component {
             regIRAShowing: true,
             rollIRAShowing: false,
             rothIRAShowing: false,
-            defaultShow: false
+            defaultShow: false,
+            isClientSlideOpen: false
         });
     }
 
@@ -730,7 +751,8 @@ class Dashboard extends Component {
             regIRAShowing: false,
             rollIRAShowing: true,
             rothIRAShowing: false,
-            defaultShow: false
+            defaultShow: false,
+            isClientSlideOpen: false
         });
     }
 
@@ -744,7 +766,23 @@ class Dashboard extends Component {
             regIRAShowing: false,
             rollIRAShowing: false,
             rothIRAShowing: true,
-            defaultShow: false
+            defaultShow: false,
+            isClientSlideOpen: false
+        });
+    }
+
+    handleToggle8(e) {
+        e.preventDefault();
+        this.setState({
+            savingsShow: false,
+            checkingShow: false,
+            cdShowing: false,
+            dbShowing: false,
+            regIRAShowing: false,
+            rollIRAShowing: false,
+            rothIRAShowing: true,
+            defaultShow: false,
+            isClientSlideOpen: true
         });
     }
 
@@ -829,14 +867,35 @@ class Dashboard extends Component {
         }
     }
 
-    renderSavingsTransactions(){
-        const trans = this.props.holder.savings.transactions.map((transaction) => {
-            return(
-            <li>-{transaction.type} (amount: {transaction.amount}, from: {transaction.source}, recipient : {transaction.target}, on: {transaction.date}</li>
+    renderClient() {
+        const {isClientSlideOpen} = this.state;
+        if(this.props.holder == null){
+            return (
+                <div id="savingsContent">   
+                </div>
             );
-        })
-
-        return trans;
+        } else {
+            return (
+                <div id="savingsContent" className={`panel ${isClientSlideOpen ? 'showing' : ''}`}>
+                    <div className="content-header p-2 text-white mb-2">
+                        <p className="mr-2 tags">Client View</p>
+                        <div className="end-buttons">
+                            <Button onClick={this.toggleClientDelete}>Delete</Button>
+                        </div>
+                    </div>
+                    <div className="inner-content">
+                        <div className="inner-side">
+                            <ul>
+                                <li>Account ID: ({this.props.holder.id})</li>
+                                <li>First Name: {this.props.holder.firstName}</li>
+                                <li>Middle Name: {this.props.holder.middleName}</li>
+                                <li>Last Name: {this.props.holder.lastName}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
     }
 
     renderSavingsList() {
@@ -1355,7 +1414,7 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="container py-3">
-                    <Button>Client Details</Button>
+                    <Button onClick={(e) => this.handleToggle8(e)}>Client Details</Button>
                 </div>
                 <div className="container client-dash">
                     <div className="side mr-2 p-4">
@@ -1378,6 +1437,7 @@ class Dashboard extends Component {
                         {this.renderRollList()}
                         {this.renderRothList()}
                         {this.renderDefault()}
+                        {this.renderClient()}
                     </div>
                 </div>
 
@@ -1712,6 +1772,23 @@ class Dashboard extends Component {
                                     Yes
                                 </Button>
                                 <Button onClick={this.toggleDeleteAccount}>No</Button>
+                            </div>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.isClientViewOpen} toggle={this.toggleClientDelete}>
+                    <ModalHeader className="modal-head">Sure you want to delete?</ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => this.handleClientDelete(this.state.accountToDelete)}>
+                            <div className="modal-row">
+                                <p>Once you submit yes, your entire account will be deleted</p>
+                            </div>
+                            <div className="modal-row">
+                                <Button type="submit">
+                                    Yes
+                                </Button>
+                                <Button onClick={this.toggleClientDelete}>No</Button>
                             </div>
                         </LocalForm>
                     </ModalBody>

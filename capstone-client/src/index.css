@@ -10,6 +10,20 @@ body {
   box-shadow: 1px 1px 10px 4px rgb(150, 221, 165);
 }
 
+.nav-brand:focus, .nav-brand:active, .nav-brand:hover {
+  color: rgb(0, 0, 0)!important;
+  text-decoration: none;
+}
+
+.nav-brand {
+  color: rgb(0, 0, 0)!important;
+}
+
+.nav-brand.active {
+  color: rgb(0, 0, 0)!important;
+  text-decoration: none;
+}
+
 .green-text {
   color: rgb(62, 163, 62);
 }

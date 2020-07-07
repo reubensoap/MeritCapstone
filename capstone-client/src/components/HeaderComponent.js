@@ -82,11 +82,9 @@ class Header extends Component {
                     <div className="container-fluid">
                         <Navbar light expand="md">
                             <NavbarToggler onClick={this.toggleNav} />
-                            <NavbarBrand className="mr-auto" to="/home">
-                                <NavLink className="nav-link" to="/home">
-                                    <h2>Merit Bank</h2>
-                                </NavLink>
-                            </NavbarBrand>
+                            <NavLink className="mr-auto nav-brand" to="/home">
+                                <h2>Merit Bank</h2>
+                            </NavLink>
                             <Collapse isOpen={this.state.isNavOpen} navbar>
                                 <Nav navbar>
                                     <NavItem>

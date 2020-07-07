@@ -155,6 +155,17 @@ const request = (options) => {
         });
     }
 
+    export function deleteAccount() {
+        if(!localStorage.getItem(ACCESS_TOKEN)) {
+            return Promise.reject("No access token set.");
+        }
+
+        return request({
+            url: BASE_URL + "/Delete/AccountHolder",
+            method: 'POST'
+        });
+    }
+
     export function deleteChecking() {
         if(!localStorage.getItem(ACCESS_TOKEN)) {
             return Promise.reject("No access token set.");
