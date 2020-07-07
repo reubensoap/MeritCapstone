@@ -96,7 +96,7 @@ class Main extends Component {
 
       const DashboardPage = () => {
         return(
-          <Dashboard authen={this.props.isAuthenticated} onLogout={this.handleLogout} logout={this.props.logout} holder={this.props.accountHolder} onGetHolder={this.props.fetchHolder} onRemove={this.props.removeHolder} updateHolder={this.props.addHolder}/>
+          <Dashboard authen={this.props.isAuthenticated} onLogout={this.handleLogout} logout={this.props.logout} holder={this.props.accountHolder} onGetHolder={this.props.fetchHolder} onRemove={this.props.removeHolder} updateHolder={this.props.addHolder} offers={this.props.cdofferings}/>
         );
       }
 

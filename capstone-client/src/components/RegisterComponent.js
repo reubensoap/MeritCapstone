@@ -32,21 +32,27 @@ class Register extends Component {
     }
 
     handleSubmit(values) {
-        console.log(values);
-        const loginrequest = Object.assign({}, values);
-        signup(loginrequest)
-        .then(response => {
-            this.setState({ redirect: "/login" });
-            console.log(response);
-            alert("Logins Below: \n\nUserName: " + values.userName + " Password: " + values.password + "\n\nPlease keep logins safe")
-        })
-        .catch(cds => {
+        if(values.password !== values.passwordConfirm){
             this.setState({
-                errorMessage: cds.message
+                errorMessage: "Password confirmation invalid, please try again"
             });
             this.toggleModal();
-            console.log(cds.message);
-        });
+        } else {
+            console.log(values);
+            const loginrequest = Object.assign({}, values);
+            signup(loginrequest)
+            .then(response => {
+                this.setState({ redirect: "/login" });
+                console.log(response);
+            })
+            .catch(cds => {
+                this.setState({
+                    errorMessage: cds.message
+                });
+                this.toggleModal();
+                console.log(cds.message);
+            });
+        }
     }
 
     render() {
@@ -91,6 +97,22 @@ class Register extends Component {
                                     messages = {{
                                         required: 'Required ',
                                         minLength: 'Must be 8 characters or more'
+                                    }}
+                                />
+                            </Row>
+                            <Row className="form-group">
+                                <Control type="password" model=".passwordConfirm" id="passwordConfirm" name="passwordConfirm"
+                                    placeholder="Confirm Password"
+                                    className="form-control"
+                                    validators = {{
+                                        required
+                                    }} />
+                                <Errors
+                                    className="text-danger"
+                                    model=".passwordConfirm"
+                                    show="touched"
+                                    messages = {{
+                                        required: 'Required '
                                     }}
                                 />
                             </Row>

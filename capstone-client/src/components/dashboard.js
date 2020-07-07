@@ -419,7 +419,18 @@ class Dashboard extends Component {
     handleAddCD(values) {
         this.toggleCDAccount();
         console.log(values);
-        createCDAccount(values)
+        var interestCD = 0;
+        var termCD = 0;
+        for(var x = 0; x < this.props.offers.length; x++){
+            if(Number(values.offer) == x){
+                interestCD = this.props.offers[x].interestRate;
+                termCD = this.props.offers[x].term;
+            }
+        }
+        var obj = '{"balance":' + values.balance + ',"interestRate":' + interestCD + ',"term":' + termCD + '}';
+        console.log(obj);
+        var fObj = JSON.parse(obj);
+        createCDAccount(fObj)
         .then(response => {
             console.log(response);
         })
@@ -477,12 +488,16 @@ class Dashboard extends Component {
     }
 
     handleDeleteCD(value) {
+        console.log(value);
         deleteCD(value.accountNumber)
         .then(response => {
             console.log(response);
         })
         .then(cds => {
             this.getHolderAgain();
+        })
+        .catch(cds => {
+            console.log(cds);
         });
     }
 
@@ -748,7 +763,7 @@ class Dashboard extends Component {
         if(this.props.holder == null){
             return <li><p>Savings Account</p></li>
         } else if(this.props.holder.savings == null){
-            return <li><Button className="dash-btn" onClick={this.toggleSavings}>Add Savings Account</Button></li>
+            return <li><Button className="dash-btn" onClick={this.toggleSavings}>Open Savings Account</Button></li>
         } else {
             return <li><Button className="dash-btn" onClick={(e) => this.handleToggle(e)}>Savings Account</Button></li>
         }
@@ -758,7 +773,7 @@ class Dashboard extends Component {
         if(this.props.holder == null){
             return <li><p>Checking Account</p></li>
         } else if(this.props.holder.checking == null){
-            return <li><Button className="dash-btn" onClick={this.toggleChecking}>Add Checking Account</Button></li>
+            return <li><Button className="dash-btn" onClick={this.toggleChecking}>Open Checking Account</Button></li>
         } else {
             return <li><Button className="dash-btn" onClick={(e) => this.handleToggle2(e)}>Checking Account</Button></li>
         }
@@ -768,7 +783,7 @@ class Dashboard extends Component {
         if(this.props.holder == null) {
             return <li><p>CD Account</p></li>
         } else if(this.props.holder.cdAccount == 0){
-            return <li><Button className="dash-btn" onClick={this.toggleCDAccount}>Add CD Account</Button></li>
+            return <li><Button className="dash-btn" onClick={this.toggleCDAccount}>Open CD Account</Button></li>
         } else {
             return <li><Button className="dash-btn" onClick={(e) => this.handleToggle3(e)}>CD Accounts</Button></li>
         }
@@ -778,7 +793,7 @@ class Dashboard extends Component {
         if(this.props.holder == null) {
             return <li><p>DB Account</p></li>
         } else if(this.props.holder.dbAccount == 0){
-            return <li><Button className="dash-btn" onClick={this.toggleDBAccount}>Add DB Account</Button></li>
+            return <li><Button className="dash-btn" onClick={this.toggleDBAccount}>Open DB Account</Button></li>
         } else {
             return <li><Button className="dash-btn" onClick={(e) => this.handleToggle4(e)}>DB Accounts</Button></li>
         }
@@ -788,7 +803,7 @@ class Dashboard extends Component {
         if(this.props.holder == null) {
             return <li><p>Standard IRA Account</p></li>
         } else if(this.props.holder.regularIRA == null){
-            return <li><Button className="dash-btn" onClick={this.toggleRegIRA}>Add Standard IRA Account</Button></li>
+            return <li><Button className="dash-btn" onClick={this.toggleRegIRA}>Open Standard IRA Account</Button></li>
         } else {
             return <li><Button className="dash-btn" onClick={(e) => this.handleToggle5(e)}>Standard IRA Account</Button></li>
         }
@@ -798,7 +813,7 @@ class Dashboard extends Component {
         if(this.props.holder == null) {
             return <li><p>Rollover IRA Account</p></li>
         } else if(this.props.holder.rolloverIRA == null){
-            return <li><Button className="dash-btn" onClick={this.toggleRollIRA}>Add Rollover IRA Account</Button></li>
+            return <li><Button className="dash-btn" onClick={this.toggleRollIRA}>Open Rollover IRA Account</Button></li>
         } else {
             return <li><Button className="dash-btn" onClick={(e) => this.handleToggle6(e)}>Rollover IRA Account</Button></li>
         }
@@ -808,7 +823,7 @@ class Dashboard extends Component {
         if(this.props.holder == null) {
             return <li><p>Roth IRA Account</p></li>
         } else if(this.props.holder.rothIRA == null){
-            return <li><Button className="dash-btn" onClick={this.toggleRothIRA}>Add Roth IRA Account</Button></li>
+            return <li><Button className="dash-btn" onClick={this.toggleRothIRA}>Open Roth IRA Account</Button></li>
         } else {
             return <li><Button className="dash-btn" onClick={(e) => this.handleToggle7(e)}>Roth IRA Account</Button></li>
         }
@@ -852,7 +867,7 @@ class Dashboard extends Component {
                             <div className="inner-side">
                                 <ul>
                                     <li>Account ({this.props.holder.savings.accountNumber})</li>
-                                    <li>Balance: ${this.props.holder.savings.balance}</li>
+                                    <li>Balance: ${this.props.holder.savings.balance.toFixed(2)}</li>
                                     <li>Interest Rate: {this.props.holder.savings.interestRate}%</li>
                                     <li>Creation Date: {this.props.holder.savings.accoutStartDate}</li>
                                 </ul>
@@ -1125,7 +1140,7 @@ class Dashboard extends Component {
                         <div className="inner-content">
                             <div className="inner-side">
                                 {this.renderCDListItems()}
-                                <Button className="dash-btn" onClick={this.toggleCDAccount}>Add CD Account</Button>
+                                <Button className="dash-btn" onClick={this.toggleCDAccount}>Open CD Account</Button>
                             </div>
                             
                         </div>
@@ -1197,7 +1212,7 @@ class Dashboard extends Component {
                         <div className="inner-content">
                             <div className="inner-side">
                                 {this.renderDBListItems()}
-                                <Button className="dash-btn" onClick={this.toggleDBAccount}>Add DB Account</Button>
+                                <Button className="dash-btn" onClick={this.toggleDBAccount}>Open DB Account</Button>
                             </div>
                             <div className="inner-content-2">
                                 {this.renderDBTransactions()}
@@ -1220,6 +1235,19 @@ class Dashboard extends Component {
         })
 
         return cdList;
+    }
+
+    renderCDOfferOptions(){
+        if(this.props.offers == null){
+            return <option>1</option>
+        }
+        const cdoffers = Object.entries(this.props.offers).map(([key, value]) => {
+            var keyd = Number(key) + 1;
+            return(
+            <option value={key}>Plan {keyd++} (Interest Rate: {value.interestRate}, Term: {value.term})</option>
+            );
+        })
+        return cdoffers;
     }
 
     renderDBAccountOptions() {
@@ -1355,7 +1383,7 @@ class Dashboard extends Component {
 
 
                 <Modal isOpen={this.state.isCheckingOpen} toggle={this.toggleChecking}>
-                    <ModalHeader>Add Checking</ModalHeader>
+                    <ModalHeader>Open Checking Account</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleAddChecking(values)}>
                             <Row className="form-group">
@@ -1377,24 +1405,6 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                               <Label htmlFor="interestRate" md={2}>Interest Rate</Label>
-                                <Control.text model=".interestRate" type="text" id="interestRate" name="interestRate"
-                                    placeholder="0.01" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".interestRate"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
                                 <Col>
                                     <Button type="submit" className="dash-btn">
                                         Submit
@@ -1406,7 +1416,7 @@ class Dashboard extends Component {
                 </Modal>
 
                 <Modal isOpen={this.state.isSavingsOpen} toggle={this.toggleSavings}>
-                    <ModalHeader>Add Savings</ModalHeader>
+                    <ModalHeader>Open Savings Account</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleAddSavings(values)}>
                             <Row className="form-group">
@@ -1428,24 +1438,6 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                               <Label htmlFor="interestRate" md={2}>Interest Rate</Label>
-                                <Control.text model=".interestRate" type="text" id="interestRate" name="interestRate"
-                                    placeholder="0.01" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".interestRate"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
                                 <Col >
                                     <Button type="submit" className="dash-btn">
                                         Submit
@@ -1457,7 +1449,7 @@ class Dashboard extends Component {
                 </Modal>
 
                 <Modal isOpen={this.state.isCDOpen} toggle={this.toggleCDAccount}>
-                    <ModalHeader>Add CD Account</ModalHeader>
+                    <ModalHeader>Open CD Account</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleAddCD(values)}>
                             <Row className="form-group">
@@ -1479,40 +1471,12 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                               <Label htmlFor="interestRate" md={2}>Interest Rate</Label>
-                                <Control.text model=".interestRate" type="text" id="interestRate" name="interestRate"
-                                    placeholder="0.01" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".interestRate"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
-                               <Label htmlFor="term" md={2}>Term</Label>
-                                <Control.text model=".term" type="text" id="term" name="term"
-                                    placeholder="4" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".term"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
+                                <Label htmlFor="offer" md={2}>Plan</Label>
+                                <Control.select model=".offer" name="offer" 
+                                    className="form-control mx-3" >
+                                    <option>Choose Id</option>
+                                    {this.renderCDOfferOptions()}
+                                </Control.select>
                             </Row>
                             <Row className="form-group">
                                 <Col>
@@ -1526,7 +1490,7 @@ class Dashboard extends Component {
                 </Modal>
 
                 <Modal isOpen={this.state.isdbOpen} toggle={this.toggleDBAccount}>
-                    <ModalHeader>Add DB Account</ModalHeader>
+                    <ModalHeader>Open DB Account</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleAddDB(values)}>
                             <Row className="form-group">
@@ -1595,7 +1559,7 @@ class Dashboard extends Component {
                 </Modal>
 
                 <Modal isOpen={this.state.isRegIRAOpen} toggle={this.toggleRegIRA}>
-                    <ModalHeader>Add Standard IRA Account</ModalHeader>
+                    <ModalHeader>Open Standard IRA Account</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleAddRegIRA(values)}>
                             <Row className="form-group">
@@ -1617,24 +1581,6 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                               <Label htmlFor="interestRate" md={2}>Interest Rate</Label>
-                                <Control.text model=".interestRate" type="text" id="interestRate" name="interestRate"
-                                    placeholder="0.01" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".interestRate"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
                                 <Col>
                                     <Button type="submit" className="dash-btn">
                                         Submit
@@ -1646,7 +1592,7 @@ class Dashboard extends Component {
                 </Modal>
 
                 <Modal isOpen={this.state.isRollIRAOpen} toggle={this.toggleRollIRA}>
-                    <ModalHeader>Add Rollover IRA Account</ModalHeader>
+                    <ModalHeader>Open Rollover IRA Account</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleAddRollIRA(values)}>
                             <Row className="form-group">
@@ -1668,24 +1614,6 @@ class Dashboard extends Component {
                                 />
                             </Row>
                             <Row className="form-group">
-                               <Label htmlFor="interestRate" md={2}>Interest Rate</Label>
-                                <Control.text model=".interestRate" type="text" id="interestRate" name="interestRate"
-                                    placeholder="0.01" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".interestRate"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
                                 <Col>
                                     <Button type="submit" className="dash-btn">
                                         Submit
@@ -1697,7 +1625,7 @@ class Dashboard extends Component {
                 </Modal>
 
                 <Modal isOpen={this.state.isRothIRAOpen} toggle={this.toggleRothIRA}>
-                    <ModalHeader>Add Roth IRA Account</ModalHeader>
+                    <ModalHeader>Open Roth IRA Account</ModalHeader>
                     <ModalBody>
                         <LocalForm onSubmit={(values) => this.handleAddRothIRA(values)}>
                             <Row className="form-group">
@@ -1712,24 +1640,6 @@ class Dashboard extends Component {
                                 <Errors 
                                     className="text-danger mx-3"
                                     model=".balance"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
-                               <Label htmlFor="interestRate" md={2}>Interest Rate</Label>
-                                <Control.text model=".interestRate" type="text" id="interestRate" name="interestRate"
-                                    placeholder="0.01" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".interestRate"
                                     show="touched"
                                      messages={{
                                         required: 'Required',
@@ -1752,7 +1662,7 @@ class Dashboard extends Component {
                     <ModalBody>
                         <LocalForm onSubmit={(value) => this.handleDeleteCD(value)}>
                             <Row className="form-group">
-                            <Label htmlFor="accountNumber" md={2}>Rating</Label>
+                            <Label htmlFor="accountNumber" md={2}>Account</Label>
                                 <Control.select model=".accountNumber" name="accountNumber" 
                                     className="form-control mx-3" >
                                     <option>Choose Id</option>
@@ -1775,7 +1685,7 @@ class Dashboard extends Component {
                     <ModalBody>
                         <LocalForm onSubmit={(value) => this.handleDeleteDB(value)}>
                             <Row className="form-group">
-                            <Label htmlFor="accountNumber" md={2}>Rating</Label>
+                            <Label htmlFor="accountNumber" md={2}>Account</Label>
                                 <Control.select model=".accountNumber" name="accountNumber" 
                                     className="form-control mx-3" >
                                     <option>Choose Id</option>

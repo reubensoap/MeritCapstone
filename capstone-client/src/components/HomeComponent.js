@@ -18,7 +18,7 @@ function Home(props) {
                 <div className="row py-5">
                     <div className="col col-md-6 pt-5">
                         <h2 className="biggest-header-text pb-3">Banking made awesome</h2>
-                        <p className="gray secondary-header-text">Get paid up to 2 days early with direct deposit and grow your savings. No hidden fees. No surprises.</p>
+                        <p className="gray secondary-header-text">Get paid up to 2 days early with direct deposit and grow your savings.<br/> No hidden fees. No surprises.</p>
                         <p className="tiny-text">Learn how we collect and use your information by visiting our Privacy Policy <br />Banking services provided by The Bancorp Bank or Stride Bank, N.A.; Members FDIC </p>
                         <RenderUserOptions obj={props.authen}/>
                     </div>

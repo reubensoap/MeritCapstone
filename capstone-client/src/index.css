@@ -276,6 +276,11 @@ p {
   padding-bottom: 3px;
 }
 
+.grayed-out {
+  color: rgb(187, 187, 187);
+  font-size: 0.8rem;
+}
+
 .inner-content-2 {
   flex: 2;
   padding-left: 10px;
@@ -321,6 +326,10 @@ p {
 
 .color-primary {
   background: rgb(22, 138, 57);
+}
+
+.footer{
+  margin-top: 50px;
 }
 
 .footer-row {

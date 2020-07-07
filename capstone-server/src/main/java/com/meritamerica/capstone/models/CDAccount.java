@@ -68,6 +68,8 @@ public class CDAccount extends BankAccount{
 	}
 	@Override
 	public double closingValue() {
-		return balance * Math.pow(1 + offering.getInterestRate(), offering.getTerm());
+		/* Used to be */
+		/* return balance * Math.pow(1 + offering.getInterestRate(), offering.getTerm()); */
+		return balance * Math.pow(1 + this.interestRate, this.term);
 	}
 }

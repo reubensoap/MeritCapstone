@@ -27,7 +27,7 @@ function RenderUserOptions({obj}){
 function Footer(props) {
     
     return(
-        <div className="footer pt-5">
+        <div className="footer pt-5 light-gray">
             <div className="container">
                 <div className="row footer-row">             
                     <div className="col-3">
@@ -42,7 +42,7 @@ function Footer(props) {
                     <div className="col-3">
                         <h5>Contact Us</h5>
                         <ul className="list-unstyled">
-                            <li>support@meritbank.com</li>
+                            <li><a href="#">support@meritbank.com</a></li>
                             <li>972-000-0000</li>
                         </ul>
                     </div>
