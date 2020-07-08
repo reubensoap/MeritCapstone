@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import {Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, 
-    Button, Modal, ModalHeader, ModalBody,
-    Form, FormGroup, Label, Input } from 'reactstrap';
+import {Navbar, Nav, NavbarToggler, Collapse, NavItem, Button } from 'reactstrap';
 import {NavLink} from 'react-router-dom';
 
 class Header extends Component {
@@ -68,7 +66,7 @@ class Header extends Component {
                         </NavLink>
                     </NavItem>
                     <NavItem>
-                        <Button onClick={this.logoutEntirely}>Logout</Button>
+                        <Button onClick={this.logoutEntirely} className="dash-btn-gray">Logout</Button>
                     </NavItem>
                 </Nav>
             );

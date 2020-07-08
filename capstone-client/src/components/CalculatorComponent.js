@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Label, Col, Button } from 'reactstrap';
-import { getCdOfferings } from '../Utils/APIUtils';
-import { OFFERS } from '../Utils/testCDOfferings';
 import { LocalForm, Control } from 'react-redux-form';
-import { Link } from 'react-router-dom';
 
 class Calculator extends Component {
 
@@ -117,7 +114,7 @@ class Calculator extends Component {
                             </p>
                         </div>
                         <div className="col col-md-6 smaller-section">
-                            <img src="./images/hero-image.png" />
+                            <img src="./images/hero-image-2.png" />
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button} from 'reactstrap';
 
 function RenderUserOptions({obj}){
     if(obj == true){
@@ -30,16 +29,13 @@ function Home(props) {
             <div className="row py-5 light-gray">
                 <div className="container breaker">
                     <div className="col">
-                        <img src="./images/WSJ.png" />
+                        <img src="./images/usatoday.png" />
                     </div>
                     <div className="col">
                         <img src="./images/Forbes.png" />
                     </div>
                     <div className="col">
                         <img src="./images/NYT.png" />
-                    </div>
-                    <div className="col">
-                        <img src="./images/usatoday.png" />
                     </div>
                 </div>
             </div>
@@ -55,7 +51,7 @@ function Home(props) {
                 </div>
                 <div className="row py-5">
                     <div className="col col-md-6 smaller-section">
-                        <img src="./images/paid-early.png" />
+                        <img src="./images/paid-early-2.png" />
                     </div>
                     <div className="col col-md-6 pt-3">
                         <h3>Get Paid Early</h3>

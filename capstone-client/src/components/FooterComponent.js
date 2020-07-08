@@ -48,10 +48,10 @@ function Footer(props) {
                     </div>
                     <RenderUserOptions obj={props.authen}/>
                     <div className="col-3 align-self-center">
-                        <div className="text-center">
-                            <a className="" href="http://google.com/+"><i className="fa fa-google-plus"></i></a>
-                            <a className="btn btn-social-icon btn-facebook" href="http://www.facebook.com/profile.php?id="><i className="fa fa-facebook"></i></a>
-                            <a className="btn btn-social-icon btn-linkedin" href="http://www.linkedin.com/in/"><i className="fa fa-linkedin"></i></a>
+                        <div className="text-center social-row">
+                            <a className="" href="https://github.com/reubensoap/MeritCapstone" target="_blank"><img src="./images/github-icon.png"></img></a>
+                            <a  href="#"><img src="./images/facebook-icon.png"></img></a>
+                            <a  href="#"><img src="./images/linkedin-icon.png"></img></a>
                         </div>
                     </div>
                 </div>

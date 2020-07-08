@@ -1,10 +1,9 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Row, Label, Col, Button, Card ,CardBody, Collapse, CardHeader, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import { createSavingsAccount, createCheckingAccount, createCDAccount, createDBAccount, createRegIRA, createRollIRA, createRothIRA
     , deleteChecking, deleteCD, deleteDB, deleteReg, deleteRoll, deleteRoth, deposit, withdraw, transfer, deleteAccount, ACCESS_TOKEN } from '../Utils/APIUtils';
-import { OFFERS } from '../Utils/testCDOfferings';
 import { LocalForm, Control, Errors } from 'react-redux-form';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -780,7 +779,7 @@ class Dashboard extends Component {
             dbShowing: false,
             regIRAShowing: false,
             rollIRAShowing: false,
-            rothIRAShowing: true,
+            rothIRAShowing: false,
             defaultShow: false,
             isClientSlideOpen: true
         });
@@ -880,11 +879,11 @@ class Dashboard extends Component {
                     <div className="content-header p-2 text-white mb-2">
                         <p className="mr-2 tags">Client View</p>
                         <div className="end-buttons">
-                            <Button onClick={this.toggleClientDelete}>Delete</Button>
+                            <Button onClick={this.toggleClientDelete} className="dash-btn-gray">Delete</Button>
                         </div>
                     </div>
                     <div className="inner-content">
-                        <div className="inner-side">
+                        <div className="inner-side-2">
                             <ul>
                                 <li>Account ID: ({this.props.holder.id})</li>
                                 <li>First Name: {this.props.holder.firstName}</li>
@@ -896,6 +895,16 @@ class Dashboard extends Component {
                 </div>
             );
         }
+    }
+
+    renderSavingsTransactions(){
+        const trans = this.props.holder.savings.transactions.map((transaction) => {
+            return(
+            <li>-{transaction.type} (amount: {transaction.amount}, from: {transaction.source}, recipient : {transaction.target}, on: {transaction.date}</li>
+            );
+        })
+
+        return trans;
     }
 
     renderSavingsList() {
@@ -917,9 +926,9 @@ class Dashboard extends Component {
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Savings Account</p>
                             <div className="end-buttons">
-                                <Button onClick={this.toggleDepositSavings}>Deposit</Button>
-                                <Button onClick={this.toggleWithdrawSavings}>Withdraw</Button>
-                                <Button onClick={this.toggleTransferSavings}>Transfer</Button>
+                                <Button onClick={this.toggleDepositSavings} className="dash-btn-blue">Deposit</Button>
+                                <Button onClick={this.toggleWithdrawSavings} className="dash-btn-blue">Withdraw</Button>
+                                <Button onClick={this.toggleTransferSavings} className="dash-btn-blue">Transfer</Button>
                             </div>
                         </div>
                         <div className="inner-content">
@@ -967,10 +976,10 @@ class Dashboard extends Component {
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Checking Account</p>
                             <div className="end-buttons">
-                                <Button onClick={this.toggleDepositChecking}>Deposit</Button>
-                                <Button onClick={this.toggleWithdrawChecking}>Withdraw</Button>
-                                <Button onClick={this.toggleTransferChecking}>Transfer</Button>
-                                <Button onClick={this.toggleDeleteAccount}>Delete</Button>
+                                <Button onClick={this.toggleDepositChecking} className="dash-btn-blue">Deposit</Button>
+                                <Button onClick={this.toggleWithdrawChecking} className="dash-btn-blue">Withdraw</Button>
+                                <Button onClick={this.toggleTransferChecking} className="dash-btn-blue">Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount} className="dash-btn-gray">Delete</Button>
                             </div>
                             
                         </div>
@@ -1019,10 +1028,10 @@ class Dashboard extends Component {
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Standard IRA Account</p>
                             <div className="end-buttons">
-                                <Button onClick={this.toggleDepositReg}>Deposit</Button>
-                                <Button onClick={this.toggleWithdrawReg}>Withdraw</Button>
-                                <Button onClick={this.toggleTransferReg}>Transfer</Button>
-                                <Button onClick={this.toggleDeleteAccount2}>Delete</Button>
+                                <Button onClick={this.toggleDepositReg} className="dash-btn-blue">Deposit</Button>
+                                <Button onClick={this.toggleWithdrawReg} className="dash-btn-blue">Withdraw</Button>
+                                <Button onClick={this.toggleTransferReg} className="dash-btn-blue">Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount2} className="dash-btn-gray">Delete</Button>
                             </div>
                         </div>
                         <div className="inner-content">
@@ -1070,10 +1079,10 @@ class Dashboard extends Component {
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Rollover IRA Account</p>
                             <div className="end-buttons">
-                                <Button onClick={this.toggleDepositRoll}>Deposit</Button>
-                                <Button onClick={this.toggleWithdrawRoll}>Withdraw</Button>
-                                <Button onClick={this.toggleTransferRoll}>Transfer</Button>
-                                <Button onClick={this.toggleDeleteAccount4}>Delete</Button>
+                                <Button onClick={this.toggleDepositRoll} className="dash-btn-blue">Deposit</Button>
+                                <Button onClick={this.toggleWithdrawRoll} className="dash-btn-blue">Withdraw</Button>
+                                <Button onClick={this.toggleTransferRoll} className="dash-btn-blue">Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount4} className="dash-btn-gray">Delete</Button>
                             </div>
                         </div>
                         <div className="inner-content">
@@ -1121,10 +1130,10 @@ class Dashboard extends Component {
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">Roth IRA Account</p>
                             <div className="end-buttons">
-                                <Button onClick={this.toggleDepositRoth}>Deposit</Button>
-                                <Button onClick={this.toggleWithdrawRoth}>Withdraw</Button>
-                                <Button onClick={this.toggleTransferRoth}>Transfer</Button>
-                                <Button onClick={this.toggleDeleteAccount3}>Delete</Button>
+                                <Button onClick={this.toggleDepositRoth} className="dash-btn-blue">Deposit</Button>
+                                <Button onClick={this.toggleWithdrawRoth} className="dash-btn-blue">Withdraw</Button>
+                                <Button onClick={this.toggleTransferRoth} className="dash-btn-blue">Transfer</Button>
+                                <Button onClick={this.toggleDeleteAccount3} className="dash-btn-gray">Delete</Button>
                             </div>
                         </div>
                         <div className="inner-content">
@@ -1193,7 +1202,7 @@ class Dashboard extends Component {
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">CD Accounts</p>
                             <div className="end-buttons">
-                                <Button onClick={this.toggleCDDelete}>Delete</Button>
+                                <Button onClick={this.toggleCDDelete} className="dash-btn-gray">Delete</Button>
                             </div>
                         </div>
                         <div className="inner-content">
@@ -1262,10 +1271,10 @@ class Dashboard extends Component {
                         <div className="content-header p-2 text-white mb-2">
                             <p className="mr-2 tags">DB Accounts</p>
                             <div className="end-buttons">
-                                <Button onClick={this.toggleDepositDB}>Deposit</Button>
-                                <Button onClick={this.toggleWithdrawDB}>Withdraw</Button>
-                                <Button onClick={this.toggleTransferDB}>Transfer</Button>
-                                <Button onClick={this.toggleDBDelete}>Delete</Button>
+                                <Button onClick={this.toggleDepositDB} className="dash-btn-blue">Deposit</Button>
+                                <Button onClick={this.toggleWithdrawDB} className="dash-btn-blue">Withdraw</Button>
+                                <Button onClick={this.toggleTransferDB} className="dash-btn-blue">Transfer</Button>
+                                <Button onClick={this.toggleDBDelete} className="dash-btn-gray">Delete</Button>
                             </div>
                         </div>
                         <div className="inner-content">
@@ -1409,12 +1418,13 @@ class Dashboard extends Component {
         return(
             <div className="container-fluid mt-5">
                 <div className="container-fluid dashboard-banner">
-                    <div className="container py-3">
-                        <h2 className="secondary-header-text">Welcome back {this.renderHeader()}!</h2>
+                    <div className="container inside-banner py-2">
+                        <h2>Client Dashboard</h2>
+                        <p>Welcome back {this.renderHeader()}!</p>
                     </div>
                 </div>
                 <div className="container py-3">
-                    <Button onClick={(e) => this.handleToggle8(e)}>Client Details</Button>
+                    <Button onClick={(e) => this.handleToggle8(e)} className="dash-btn-gray">Client Details</Button>
                 </div>
                 <div className="container client-dash">
                     <div className="side mr-2 p-4">
@@ -1565,24 +1575,6 @@ class Dashboard extends Component {
                                 <Errors 
                                     className="text-danger mx-3"
                                     model=".balance"
-                                    show="touched"
-                                     messages={{
-                                        required: 'Required',
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
-                               <Label htmlFor="interestRate" md={2}>Interest Rate</Label>
-                                <Control.text model=".interestRate" type="text" id="interestRate" name="interestRate"
-                                    placeholder="0.01" 
-                                    className="form-control mx-3" 
-                                    validators={{
-                                        required
-                                    }}
-                                        />
-                                <Errors 
-                                    className="text-danger mx-3"
-                                    model=".interestRate"
                                     show="touched"
                                      messages={{
                                         required: 'Required',

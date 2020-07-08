@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import {Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, 
-    Button, Modal, ModalHeader, ModalBody,
-    Form, FormGroup, Label, Input, Row } from 'reactstrap';
-import {NavLink} from 'react-router-dom';
+import { Button, Row } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { createAccountHolder } from '../Utils/APIUtils';
 import {Redirect} from 'react-router-dom';
