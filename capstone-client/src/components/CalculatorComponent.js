@@ -99,19 +99,12 @@ class Calculator extends Component {
     render() {
 
         return(
-            <div className="container-fluid mt-5">
-                <div className="container">
-                    <div className="container py-5 text-center">
-                        <h2 className="secondary-header-text">CD Account Calculator</h2>
-                    </div>
-                </div>
+            <div className="container-fluid">
                 <div className="container">
                     <div className="row py-5">
                         <div className="col col-md-6 pt-5">
-                            <h3>Our CD plans offer a variety of future value options.</h3>
-                            <p>Certificates of deposit can be an effective way to save money while you earn interest safely.
-                               Our CD accounts require no minimum amount to open a CD, unlike other banks that can have $500 or $1000 requirements.
-                            </p>
+                            <h3 className="biggest-header-text">Our CD plans offer a variety of future value options.</h3>
+                            <p className="gray secondary-header-text">Certificates of deposit can be an effective way to save money while you earn interest safely.</p>
                         </div>
                         <div className="col col-md-6 smaller-section">
                             <img src="./images/hero-image-2.png" />

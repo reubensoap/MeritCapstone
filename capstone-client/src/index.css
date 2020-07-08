@@ -4,6 +4,10 @@ body {
   font-family: sans-serif;
 }
 
+.text-light {
+  color: white;
+}
+
 .breaker .col {
   text-align: center;
 }
@@ -13,10 +17,16 @@ body {
   margin-left: 5px;
 }
 
+.account-list ul {
+  padding:0;
+  margin: 0;
+  list-style-type: none;
+}
+
 .green {
   background-color: rgb(62, 163, 62);
   color: white;
-  box-shadow: 1px 1px 10px 4px rgb(150, 221, 165);
+  box-shadow: 1px 1px 10px 4px rgb(40, 49, 42);
 }
 
 .nav-brand:focus, .nav-brand:active, .nav-brand:hover {
