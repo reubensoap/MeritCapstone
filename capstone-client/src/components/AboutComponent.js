@@ -25,9 +25,8 @@ function About(props) {
             <div className="container py-5 text-center">
                 <h3 className="pb-4">Our Team</h3>
                 <div className="row gallery pb-5">
-                    <img src="./images/003.png"/>
-                    <img src="./images/dennis_Yu.png" />
-                    <img src="./images/jay_Parekh.png" />
+                    <img src="./images/reuben-profile.png" />
+                    <img src="./images/joshua-profile.png" />
                 </div>
                 <h3 className="pb-4">Culture</h3>
                 <p>We believe that creating a company where people love to work is built on relationships, growth, and impact.

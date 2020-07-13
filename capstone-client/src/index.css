@@ -194,15 +194,18 @@ p {
 
 .dashboard-banner {
   margin-top: 100px;
-  background-color: rgb(51, 167, 67);
+  background-color: rgb(47, 150, 61);
   color: white;
   border-radius: 5px;
+  box-shadow: 0px 5px 7px rgb(216, 216, 216);
+  background-image: url(../src/lines-10.png);
+  background-position: right bottom;
+  background-repeat: no-repeat;
 }
 
 .inside-banner {
   display: flex;
   flex-direction: column;
-  
 }
 
 .inside-banner h2 {

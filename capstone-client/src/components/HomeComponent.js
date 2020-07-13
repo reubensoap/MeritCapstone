@@ -42,7 +42,7 @@ function Home(props) {
             <div className="container">
                 <div className="row py-5">
                     <div className="col col-md-6 pt-5">
-                        <h3>Overdraw fee-free with SpotMe</h3>
+                        <h3>Overdraw fee-free</h3>
                         <p>We’ll spot you on debit card purchases with no overdraft fees. Eligibility requirements apply.</p>
                     </div>
                     <div className="col col-md-6 smaller-section">

@@ -20,8 +20,8 @@ function AccountsPage(props) {
                         <img src="./images/paid-early-2.png" />
                     </div>
                     <div className="col col-md-6 pt-3">
-                        <h3>Get Paid Early</h3>
-                        <p>We’ll spot you on debit card purchases with no overdraft fees. Eligibility requirements apply.</p>
+                        <h3>All Accounts In One Place</h3>
+                        <p>Your accounts grouped together via one dashboard. Display non Merit Bank accounts on the dashboard as well.</p>
                     </div>
                 </div>
                 </div>
@@ -60,7 +60,7 @@ function AccountsPage(props) {
                 <h3 className="pb-4">Learn more about our other banking features</h3>
                 <div className="row px-5 py-3">
                     <div className="col col-md-6">
-                        <p>Get fee-free overdraft with Merit Bank SpotMe. Eligibility requirements apply.</p>
+                        <p>Get fee-free overdraft with Merit Bank. Eligibility requirements apply.</p>
                     </div>
                     <div className="col col-md-6">
                         <p>Grow your savings, automatically.</p>
